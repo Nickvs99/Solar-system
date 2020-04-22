@@ -11,23 +11,26 @@ public class SolarSystem : MonoBehaviour
     {
         bodies = new List<CelestialBody>();
     }
-    public void SpawnBodies()
+    public void SpawnBodies(int n, float boxWidth)
     {
-        // Instantiate N bodies
-        CelestialBody body1 = Instantiate(body);
-        body1.transform.position = new Vector3(-2f, 0f, 0f);
-        body1.velocity = new Vector3(0f, 0f, 0.1f);
-        bodies.Add(body1);
+        for(int i = 0; i < n; i++)
+        {
+            CelestialBody _body = Instantiate(body);
 
-        CelestialBody body2 = Instantiate(body);
-        body2.transform.position = new Vector3(2f, 0f, 0f);
-        body2.velocity = new Vector3(0f, 0f, -0.1f);
-        bodies.Add(body2);
+            float x = Random.Range(0, boxWidth);
+            float z = Random.Range(0, boxWidth);
 
-        CelestialBody body3 = Instantiate(body);
-        body3.transform.position = new Vector3(0f, 0f, 8f);
-        body3.velocity = new Vector3(0.1f, 0f, 0.2f);
-        bodies.Add(body3);
+            _body.transform.position = new Vector3(x, 0, z);
+
+            float angle = Random.Range(0, 2 * Mathf.PI);
+            float r = Random.Range(0, 0.5f);
+            float v_x = Mathf.Cos(angle) * r;
+            float v_z = Mathf.Sin(angle) * r;
+
+            _body.velocity = new Vector3(v_x, 0f, v_z);
+            bodies.Add(_body);
+
+        }
 
     }
 
