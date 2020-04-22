@@ -29,12 +29,9 @@ public class SolarSystem : MonoBehaviour
 
             _body.velocity = new Vector3(v_x, 0f, v_z);
             bodies.Add(_body);
-
         }
-
     }
-
-    
+   
     public void UpdateBodies()
     {
 
@@ -56,6 +53,19 @@ public class SolarSystem : MonoBehaviour
             Destroy(body.transform.gameObject);
         }
         bodies = new List<CelestialBody>();
+    }
+
+    public Vector3 CalcCenterOfMass()
+    {
+        Vector3 com = new Vector3(0f, 0f,0f);
+        float totalMass = 0;
+        foreach(CelestialBody body in bodies)
+        {
+            com += body.transform.position * body.mass;
+            totalMass += body.mass;
+        }
+
+        return com / totalMass;
     }
 }
 

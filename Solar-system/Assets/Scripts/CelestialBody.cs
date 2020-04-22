@@ -20,8 +20,8 @@ public class CelestialBody : MonoBehaviour
             float distSqr = vec.sqrMagnitude;
             Vector3 dir = vec.normalized;
 
-            Vector3 force = Constants.G * body.mass * body.mass / distSqr * dir;
-            Vector3 acc = force / body.mass;
+            Vector3 force = Constants.G * body.mass * this.mass / distSqr * dir;
+            Vector3 acc = force / this.mass;
 
             this.velocity += acc;
 
