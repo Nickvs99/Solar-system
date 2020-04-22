@@ -47,5 +47,15 @@ public class SolarSystem : MonoBehaviour
             body.UpdatePosition();
         }    
     }
+
+    public void ClearBodies()
+    {
+        foreach(CelestialBody body in bodies)
+        {
+         
+            Destroy(body.transform.gameObject);
+        }
+        bodies = new List<CelestialBody>();
+    }
 }
 

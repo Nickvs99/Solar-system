@@ -6,6 +6,10 @@ public class Universe : MonoBehaviour
 {
     public SolarSystem solarSystem;
 
+    [Header("Solar system properties")]
+    public int bodies;
+    public float initial_size;
+
     [Header("Seed generator")]
     public bool randomSeed;
     public int seed;
@@ -15,12 +19,17 @@ public class Universe : MonoBehaviour
 
         SetSeed();
 
-        solarSystem.SpawnBodies(3, 10f);
+        solarSystem.SpawnBodies(bodies, initial_size);
     }
 
     void Update()
     {
         solarSystem.UpdateBodies();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            RespawnSystem();
+        }
     }
 
     void SetSeed()
@@ -36,5 +45,12 @@ public class Universe : MonoBehaviour
         }
 
         Debug.Log("SEED: " + seed);
+    }
+
+    void RespawnSystem()
+    {
+        SetSeed();
+        solarSystem.ClearBodies();
+        solarSystem.SpawnBodies(bodies, initial_size);
     }
 }

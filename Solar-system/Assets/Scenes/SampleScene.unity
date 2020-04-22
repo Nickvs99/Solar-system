@@ -324,7 +324,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   body: {fileID: 5598107496370058211, guid: e2d052f40789109468c5e70918edb52b, type: 3}
-  G: 1
 --- !u!4 &1069210266
 Transform:
   m_ObjectHideFlags: 0
@@ -383,3 +382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   solarSystem: {fileID: 1069210265}
+  bodies: 3
+  initial_size: 10
+  randomSeed: 1
+  seed: 99001739
