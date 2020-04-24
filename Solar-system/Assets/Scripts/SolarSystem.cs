@@ -5,7 +5,7 @@ using UnityEngine;
 public class SolarSystem : MonoBehaviour
 {
     public CelestialBody body;
-    List<CelestialBody> bodies = new List<CelestialBody>();
+    public List<CelestialBody> bodies = new List<CelestialBody>();
 
     private void Awake()
     {
