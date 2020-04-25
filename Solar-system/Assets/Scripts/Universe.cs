@@ -24,12 +24,13 @@ public class Universe : MonoBehaviour
 
     void Update()
     {
-        solarSystem.UpdateBodies();
-
         if (Input.GetKeyDown(KeyCode.Space))
         {
             RespawnSystem();
         }
+        solarSystem.UpdateBodies();
+        solarSystem.CheckCollisions();
+
     }
 
     void SetSeed()

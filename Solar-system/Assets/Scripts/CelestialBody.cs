@@ -20,8 +20,8 @@ public class CelestialBody : MonoBehaviour
 
             // Clamp dist, since collisions have not yet been implemented.
             // This also helps with reducing bodies from being slingshotted away.
-            float distSqr = Mathf.Clamp(vec.sqrMagnitude, 2, Mathf.Infinity);
-
+            //float distSqr = Mathf.Clamp(vec.sqrMagnitude, 2, Mathf.Infinity);
+            float distSqr = vec.sqrMagnitude;
             
             Vector3 dir = vec.normalized;
 
@@ -29,7 +29,6 @@ public class CelestialBody : MonoBehaviour
             Vector3 acc = force / this.mass;
 
             this.velocity += acc;
-
         }
     }
 

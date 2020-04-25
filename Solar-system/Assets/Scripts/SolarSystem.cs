@@ -49,7 +49,6 @@ public class SolarSystem : MonoBehaviour
     {
         foreach(CelestialBody body in bodies)
         {
-         
             Destroy(body.transform.gameObject);
         }
         bodies = new List<CelestialBody>();
@@ -66,6 +65,121 @@ public class SolarSystem : MonoBehaviour
         }
 
         return com / totalMass;
+    }
+
+    public void CheckCollisions()
+    {
+        List<HashSet<CelestialBody>> collisionGroups = GetCollisionGroups();
+    }
+
+    /// <summary>
+    /// Gets all groups of bodies who are touching eachother
+    /// </summary>
+    /// <returns></returns>
+    private List<HashSet<CelestialBody>> GetCollisionGroups()
+    {
+        // Init dict,
+        // key: a body
+        // value: hashset of all the celestialbodies which collide with the key
+        IDictionary<CelestialBody, HashSet<CelestialBody>> collisions = new Dictionary<CelestialBody, HashSet<CelestialBody>>();
+        foreach (CelestialBody body in bodies)
+        {
+            collisions.Add(body, new HashSet<CelestialBody>());
+        }
+
+        // Get collisions between all bodies
+        for (int i = 0; i < bodies.Count; i++)
+        {
+            for (int j = i + 1; j < bodies.Count; j++)
+            {
+                // TODO make the dist cutoff based on the size of the body
+                if (Vector3.Distance(bodies[i].transform.position, bodies[j].transform.position) < 1f)
+                {
+                    collisions[bodies[i]].Add(bodies[j]);
+                    collisions[bodies[j]].Add(bodies[i]);
+                }
+            }
+        }
+
+        // Group all bodies who collied with eachother together
+        List<HashSet<CelestialBody>> collisionGroups = new List<HashSet<CelestialBody>>();
+        HashSet<CelestialBody> checkedBodies = new HashSet<CelestialBody>();
+        foreach (KeyValuePair<CelestialBody, HashSet<CelestialBody>> item in collisions)
+        {
+            if (item.Value.Count == 0 || checkedBodies.Contains(item.Key))
+            {
+                continue;
+            }
+            item.Key.GetComponent<Renderer>().material.color = Color.red;
+
+            HashSet<CelestialBody> group = GetBodies(item.Key, collisions, checkedBodies);
+            collisionGroups.Add(group);
+        }
+
+        VisualisizeGroups(collisionGroups);
+
+        
+
+        return collisionGroups;
+    }
+
+    /// <summary>
+    /// Visual representation of the collision groups. 
+    /// </summary>
+    /// <param name="collisionGroups"></param>
+    private void VisualisizeGroups(List<HashSet<CelestialBody>> collisionGroups)
+    {
+
+        foreach(CelestialBody body in bodies)
+        {
+            body.GetComponent<Renderer>().material.color = Color.white;
+        }
+        Color[] colors = new Color[5] {
+            Color.red, Color.blue, Color.yellow, Color.cyan, Color.magenta
+        };
+
+        int index = 0;
+        foreach (HashSet<CelestialBody> group in collisionGroups)
+        {
+            foreach (CelestialBody body in group)
+            {
+                if (index >= colors.Length)
+                {
+                    body.GetComponent<Renderer>().material.color = Color.black;
+                }
+                else
+                {
+                    body.GetComponent<Renderer>().material.color = colors[index];
+                }
+            }
+            index += 1;
+        }
+    }
+
+    /// Get all the bodies who collied with the body including itself
+    private HashSet<CelestialBody> GetBodies(CelestialBody body, IDictionary<CelestialBody, HashSet<CelestialBody>> collisions, HashSet<CelestialBody> checkedBodies)
+    {
+        HashSet<CelestialBody> coll = new HashSet<CelestialBody>() { body };
+        checkedBodies.Add(body);
+
+        foreach (CelestialBody other in collisions[body])
+        {
+            if (checkedBodies.Contains(other))
+            {
+                continue;
+            }
+
+            coll.Add(other);
+
+            HashSet<CelestialBody> col = GetBodies(other, collisions, checkedBodies);
+
+            foreach (CelestialBody temp in col)
+            {
+                coll.Add(temp);
+            }
+        }
+
+        return coll;
     }
 }
 
