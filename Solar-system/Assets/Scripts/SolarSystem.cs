@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SolarSystem : MonoBehaviour
 {
-    public CelestialBody body;
+    public CelestialBody bodyPrefab;
     public List<CelestialBody> bodies = new List<CelestialBody>();
 
     private void Awake()
@@ -15,7 +15,7 @@ public class SolarSystem : MonoBehaviour
     {
         for(int i = 0; i < n; i++)
         {
-            CelestialBody _body = Instantiate(body);
+            CelestialBody _body = Instantiate(bodyPrefab);
 
             float x = Random.Range(0, boxWidth);
             float z = Random.Range(0, boxWidth);
@@ -70,6 +70,11 @@ public class SolarSystem : MonoBehaviour
     public void CheckCollisions()
     {
         List<HashSet<CelestialBody>> collisionGroups = GetCollisionGroups();
+
+        foreach(HashSet<CelestialBody> group in collisionGroups)
+        {
+            MergeBodies(group);
+        }
     }
 
     /// <summary>
@@ -117,8 +122,6 @@ public class SolarSystem : MonoBehaviour
         }
 
         VisualisizeGroups(collisionGroups);
-
-        
 
         return collisionGroups;
     }
@@ -180,6 +183,38 @@ public class SolarSystem : MonoBehaviour
         }
 
         return coll;
+    }
+
+    /// <summary>
+    /// Merges a set of celestial bodies into one body.
+    /// </summary>
+    /// <param name="group"></param>
+    public void MergeBodies(HashSet<CelestialBody> group)
+    {
+        Vector3 pInitial = new Vector3(0, 0, 0);
+        Vector3 posAvg = new Vector3(0, 0, 0);
+        float totalMass = 0f;
+
+        foreach(CelestialBody body in group)
+        {
+            totalMass += body.mass;
+            pInitial += body.mass * body.velocity;
+            posAvg += body.transform.position;
+
+            bodies.Remove(body);
+            Destroy(body.gameObject);
+        }
+
+
+        Vector3 v_new = pInitial / totalMass;
+        posAvg /= group.Count;
+
+        CelestialBody bodyNew = Instantiate(bodyPrefab);
+        bodyNew.transform.position = posAvg;
+        bodyNew.mass = totalMass;
+        bodyNew.velocity = v_new;
+        bodies.Add(bodyNew);
+
     }
 }
 
