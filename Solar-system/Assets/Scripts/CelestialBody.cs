@@ -5,7 +5,23 @@ using UnityEngine;
 public class CelestialBody : MonoBehaviour
 {
     public Vector3 velocity;
-    public float mass = 1;
+    public float mass;
+    public float density;
+    public float radius;
+
+    public void Initialize(Vector3 _position, Vector3 _velocity, float _mass, float _density)
+    {
+        transform.position = _position;
+        velocity = _velocity;
+        mass = _mass;
+        density = _density;
+
+        // M = 4/3 Pi r^3 * dens => r = (m * 3/ 4 / Pi / dens) ** 1/3
+        radius = Mathf.Pow(mass * 3 / 4 / Mathf.PI / density, 1f/3);
+
+        transform.localScale = new Vector3(radius, radius, radius);
+
+    }
 
     public void UpdateVelocity(List<CelestialBody> bodies)
     {

@@ -337,7 +337,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae2234d234c27141896d97d021709b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  body: {fileID: 5598107496370058211, guid: e2d052f40789109468c5e70918edb52b, type: 3}
+  bodyPrefab: {fileID: 5598107496370058211, guid: e2d052f40789109468c5e70918edb52b,
+    type: 3}
   bodies: []
 --- !u!4 &1069210266
 Transform:
@@ -400,4 +401,4 @@ MonoBehaviour:
   bodies: 5
   initial_size: 10
   randomSeed: 1
-  seed: 1972263025
+  seed: 1701243897

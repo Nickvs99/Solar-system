@@ -11,24 +11,26 @@ public class SolarSystem : MonoBehaviour
     {
         bodies = new List<CelestialBody>();
     }
+
     public void SpawnBodies(int n, float boxWidth)
     {
         for(int i = 0; i < n; i++)
         {
-            CelestialBody _body = Instantiate(bodyPrefab);
+            CelestialBody body = Instantiate(bodyPrefab);
 
             float x = Random.Range(0, boxWidth);
             float z = Random.Range(0, boxWidth);
 
-            _body.transform.position = new Vector3(x, 0, z);
-
             float angle = Random.Range(0, 2 * Mathf.PI);
-            float r = Random.Range(0, 0.5f);
-            float v_x = Mathf.Cos(angle) * r;
-            float v_z = Mathf.Sin(angle) * r;
+            float v_mag = Random.Range(0, 0.5f);
+            float v_x = Mathf.Cos(angle) * v_mag;
+            float v_z = Mathf.Sin(angle) * v_mag;
 
-            _body.velocity = new Vector3(v_x, 0f, v_z);
-            bodies.Add(_body);
+            float mass = Random.Range(1f, 10f);
+          
+            body.Initialize(new Vector3(x, 0, z), new Vector3(v_x, 0f, v_z), mass, 1f);
+
+            bodies.Add(body);
         }
     }
    
@@ -97,8 +99,7 @@ public class SolarSystem : MonoBehaviour
         {
             for (int j = i + 1; j < bodies.Count; j++)
             {
-                // TODO make the dist cutoff based on the size of the body
-                if (Vector3.Distance(bodies[i].transform.position, bodies[j].transform.position) < 1f)
+                if (Vector3.Distance(bodies[i].transform.position, bodies[j].transform.position) < bodies[i].radius + bodies[j].radius)
                 {
                     collisions[bodies[i]].Add(bodies[j]);
                     collisions[bodies[j]].Add(bodies[i]);
@@ -159,7 +160,13 @@ public class SolarSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
     /// Get all the bodies who collied with the body including itself
+    /// </summary>
+    /// <param name="body"></param>
+    /// <param name="collisions"></param>
+    /// <param name="checkedBodies"></param>
+    /// <returns></returns>
     private HashSet<CelestialBody> GetBodies(CelestialBody body, IDictionary<CelestialBody, HashSet<CelestialBody>> collisions, HashSet<CelestialBody> checkedBodies)
     {
         HashSet<CelestialBody> coll = new HashSet<CelestialBody>() { body };
@@ -191,28 +198,31 @@ public class SolarSystem : MonoBehaviour
     /// <param name="group"></param>
     public void MergeBodies(HashSet<CelestialBody> group)
     {
-        Vector3 pInitial = new Vector3(0, 0, 0);
-        Vector3 posAvg = new Vector3(0, 0, 0);
+        Vector3 initMomentum = new Vector3(0, 0, 0);
+        Vector3 avgPosition = new Vector3(0, 0, 0);
         float totalMass = 0f;
+        float avgDensity = 0f;
 
         foreach(CelestialBody body in group)
         {
             totalMass += body.mass;
-            pInitial += body.mass * body.velocity;
-            posAvg += body.transform.position;
-
+            initMomentum += body.mass * body.velocity;
+            avgPosition += body.transform.position;
+            avgDensity += body.density;
+            
             bodies.Remove(body);
             Destroy(body.gameObject);
         }
 
 
-        Vector3 v_new = pInitial / totalMass;
-        posAvg /= group.Count;
+        Vector3 newVelocity = initMomentum / totalMass;
+        avgPosition /= group.Count;
+        avgDensity /= group.Count;
 
         CelestialBody bodyNew = Instantiate(bodyPrefab);
-        bodyNew.transform.position = posAvg;
-        bodyNew.mass = totalMass;
-        bodyNew.velocity = v_new;
+
+        bodyNew.Initialize(avgPosition, newVelocity, totalMass, avgDensity);
+
         bodies.Add(bodyNew);
 
     }
