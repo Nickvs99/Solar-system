@@ -19,7 +19,8 @@ public class CelestialBody : MonoBehaviour
         // M = 4/3 Pi r^3 * dens => r = (m * 3/ 4 / Pi / dens) ** 1/3
         radius = Mathf.Pow(mass * 3 / 4 / Mathf.PI / density, 1f/3);
 
-        transform.localScale = new Vector3(radius, radius, radius);
+        float diameter = 2 * radius;
+        transform.localScale = new Vector3(diameter, diameter, diameter);
 
     }
 

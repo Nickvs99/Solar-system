@@ -54,12 +54,4 @@ public class Universe : MonoBehaviour
         solarSystem.ClearBodies();
         solarSystem.SpawnBodies(bodies, initial_size);
     }
-
-    private void OnDrawGizmos()
-    {
-        Vector3 com = solarSystem.CalcCenterOfMass();
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(com, 1f);
-    }
 }

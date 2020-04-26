@@ -56,11 +56,11 @@ public class SolarSystem : MonoBehaviour
         bodies = new List<CelestialBody>();
     }
 
-    public Vector3 CalcCenterOfMass()
+    public Vector3 CalcCenterOfMass(HashSet<CelestialBody> group)
     {
         Vector3 com = new Vector3(0f, 0f,0f);
         float totalMass = 0;
-        foreach(CelestialBody body in bodies)
+        foreach(CelestialBody body in group)
         {
             com += body.transform.position * body.mass;
             totalMass += body.mass;
@@ -73,8 +73,15 @@ public class SolarSystem : MonoBehaviour
     {
         List<HashSet<CelestialBody>> collisionGroups = GetCollisionGroups();
 
-        foreach(HashSet<CelestialBody> group in collisionGroups)
+        VisualisizeGroups(collisionGroups);
+        
+        foreach (HashSet<CelestialBody> group in collisionGroups)
         {
+            Debug.Log("Groupsize: " + group.Count);
+            foreach (CelestialBody body in group)
+            {
+                Debug.Log(body, body);
+            }
             MergeBodies(group);
         }
     }
@@ -122,8 +129,6 @@ public class SolarSystem : MonoBehaviour
             collisionGroups.Add(group);
         }
 
-        VisualisizeGroups(collisionGroups);
-
         return collisionGroups;
     }
 
@@ -138,6 +143,7 @@ public class SolarSystem : MonoBehaviour
         {
             body.GetComponent<Renderer>().material.color = Color.white;
         }
+
         Color[] colors = new Color[5] {
             Color.red, Color.blue, Color.yellow, Color.cyan, Color.magenta
         };
@@ -199,31 +205,46 @@ public class SolarSystem : MonoBehaviour
     public void MergeBodies(HashSet<CelestialBody> group)
     {
         Vector3 initMomentum = new Vector3(0, 0, 0);
-        Vector3 avgPosition = new Vector3(0, 0, 0);
         float totalMass = 0f;
         float avgDensity = 0f;
+
+        Vector3 avgPosition = CalcCenterOfMass(group);
+
+        CelestialBody heaviestBody = GetHeavist(group);
 
         foreach(CelestialBody body in group)
         {
             totalMass += body.mass;
             initMomentum += body.mass * body.velocity;
-            avgPosition += body.transform.position;
             avgDensity += body.density;
             
-            bodies.Remove(body);
-            Destroy(body.gameObject);
+            if(body != heaviestBody)
+            {
+                bodies.Remove(body);
+                Destroy(body.gameObject);
+            }
         }
 
-
         Vector3 newVelocity = initMomentum / totalMass;
-        avgPosition /= group.Count;
         avgDensity /= group.Count;
 
-        CelestialBody bodyNew = Instantiate(bodyPrefab);
 
-        bodyNew.Initialize(avgPosition, newVelocity, totalMass, avgDensity);
+        heaviestBody.Initialize(avgPosition, newVelocity, totalMass, avgDensity);
+    }
 
-        bodies.Add(bodyNew);
+    private CelestialBody GetHeavist(HashSet<CelestialBody> groupHashSet)
+    {
+        List<CelestialBody> group = new List<CelestialBody>(groupHashSet);
+        CelestialBody heavistBody = group[0];
+        for(int i = 1; i < group.Count; i++)
+        {
+            if(group[i].mass > heavistBody.mass)
+            {
+                heavistBody = group[i];
+            }
+        }
+
+        return heavistBody;
 
     }
 }
