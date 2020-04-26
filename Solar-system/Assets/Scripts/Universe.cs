@@ -13,6 +13,7 @@ public class Universe : MonoBehaviour
     [Header("Seed generator")]
     public bool randomSeed;
     public int seed;
+    private bool playing = true;
 
     void Start()
     {
@@ -28,8 +29,22 @@ public class Universe : MonoBehaviour
         {
             RespawnSystem();
         }
-        solarSystem.UpdateBodies();
-        solarSystem.CheckCollisions();
+        else if (Input.GetKeyDown(KeyCode.DownArrow)){
+            playing = !playing;
+        }
+        else if (Input.GetKey(KeyCode.RightArrow))
+        {
+            playing = false;
+            solarSystem.UpdateBodies();
+            solarSystem.CheckCollisions();
+        }
+
+        if (playing)
+        {
+            solarSystem.UpdateBodies();
+            solarSystem.CheckCollisions();
+        }
+
 
     }
 
