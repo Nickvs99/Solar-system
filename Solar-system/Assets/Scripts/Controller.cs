@@ -5,8 +5,11 @@ using UnityEngine;
 public class Controller : MonoBehaviour
 {
     private CameraHandler cameraScript;
-
     public Universe universe;
+
+    private float startClickTime;
+
+    private float HOLD_TIME = 0.2f;
 
     void Start()
     {
@@ -17,10 +20,21 @@ public class Controller : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             cameraScript.SetMouseDown();
+            startClickTime = Time.time;
         }
         else if (Input.GetKeyUp(KeyCode.Mouse0))
         {
-            cameraScript.UpdateSelectedBodies();
+            float endClickTime = Time.time;
+            float deltaTime = endClickTime - startClickTime;
+
+            if(deltaTime < HOLD_TIME)
+            {
+                cameraScript.HighlightBody();
+            }
+            else
+            {
+                cameraScript.UpdateSelectedBodies();
+            }
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {

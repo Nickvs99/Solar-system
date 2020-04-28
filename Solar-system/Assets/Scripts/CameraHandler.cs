@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class CameraHandler : MonoBehaviour
 {
@@ -170,5 +171,19 @@ public class CameraHandler : MonoBehaviour
         }
 
         return validBodies;
+    }
+
+    public void HighlightBody()
+    {
+        Vector3 intersect = GetIntersectXZPlane();
+
+        foreach(CelestialBody body in selectedBodies)
+        {
+            if(Vector3.Distance(body.transform.position, intersect) < body.radius)
+            {
+                Selection.activeGameObject = body.gameObject;
+                return;
+            }
+        }
     }
 }
