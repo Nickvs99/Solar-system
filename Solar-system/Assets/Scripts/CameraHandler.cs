@@ -12,19 +12,19 @@ public class CameraHandler : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            mouseDown = GetIntersectXZPlane();
-        }
-        else if (Input.GetKeyUp(KeyCode.Mouse0))
-        {
-            mouseUp = GetIntersectXZPlane();
+        this.transform.position = CalcPosition(); 
+    }
 
-            selectedBodies = GetBodiesInRange(mouseDown, mouseUp);
-        }
+    public void SetMouseDown()
+    {
+        mouseDown = GetIntersectXZPlane();
+    }
 
-        Vector3 pos = CalcPosition();
-        this.transform.position = pos; 
+    public void UpdateSelectedBodies()
+    {
+        mouseUp = GetIntersectXZPlane();
+
+        selectedBodies = GetBodiesInRange(mouseDown, mouseUp);
     }
 
     /// <summary>

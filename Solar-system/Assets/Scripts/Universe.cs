@@ -25,27 +25,11 @@ public class Universe : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            RespawnSystem();
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow)){
-            playing = !playing;
-        }
-        else if (Input.GetKey(KeyCode.RightArrow))
-        {
-            playing = false;
-            solarSystem.UpdateBodies();
-            solarSystem.CheckCollisions();
-        }
-
         if (playing)
         {
             solarSystem.UpdateBodies();
             solarSystem.CheckCollisions();
         }
-
-
     }
 
     void SetSeed()
@@ -63,10 +47,22 @@ public class Universe : MonoBehaviour
         Debug.Log("SEED: " + seed);
     }
 
-    void RespawnSystem()
+    public void RespawnSystem()
     {
         SetSeed();
         solarSystem.ClearBodies();
         solarSystem.SpawnBodies(bodies, initial_size);
+    }
+
+    public void FlipPlayState()
+    {
+        playing = !playing;
+    }
+
+    public void ManualUpdate()
+    {
+        playing = false;
+        solarSystem.UpdateBodies();
+        solarSystem.CheckCollisions();
     }
 }
