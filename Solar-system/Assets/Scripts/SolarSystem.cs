@@ -32,6 +32,8 @@ public class SolarSystem : MonoBehaviour
 
             bodies.Add(body);
         }
+
+        Camera.main.GetComponent<CameraHandler>().selectedBodies = bodies;
     }
    
     public void UpdateBodies()
@@ -77,11 +79,6 @@ public class SolarSystem : MonoBehaviour
         
         foreach (HashSet<CelestialBody> group in collisionGroups)
         {
-            Debug.Log("Groupsize: " + group.Count);
-            foreach (CelestialBody body in group)
-            {
-                Debug.Log(body, body);
-            }
             MergeBodies(group);
         }
     }
@@ -221,6 +218,7 @@ public class SolarSystem : MonoBehaviour
             if(body != heaviestBody)
             {
                 bodies.Remove(body);
+                Camera.main.GetComponent<CameraHandler>().selectedBodies.Remove(body);
                 Destroy(body.gameObject);
             }
         }

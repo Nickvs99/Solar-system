@@ -398,7 +398,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   solarSystem: {fileID: 1069210265}
-  bodies: 5
-  initial_size: 10
+  bodies: 15
+  initial_size: 150
   randomSeed: 1
   seed: 1701243897

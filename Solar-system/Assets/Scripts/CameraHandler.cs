@@ -5,13 +5,28 @@ using UnityEngine;
 public class CameraHandler : MonoBehaviour
 {
     public Universe universe;
+    public List<CelestialBody> selectedBodies;
+
+    private Vector3 mouseDown;
+    private Vector3 mouseUp;
 
     void Update()
     {
-        Vector3 pos = CalcPosition();
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            mouseDown = GetIntersectXZPlane();
+        }
+        else if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            mouseUp = GetIntersectXZPlane();
 
+            selectedBodies = GetBodiesInRange(mouseDown, mouseUp);
+        }
+
+        Vector3 pos = CalcPosition();
         this.transform.position = pos; 
     }
+
     /// <summary>
     /// Calculates the position of the camera. At this position the camera can see 
     /// all celestial bodies from a birds eye view.
@@ -57,7 +72,7 @@ public class CameraHandler : MonoBehaviour
         float topCor = -Mathf.Infinity;
         float bottomCor = Mathf.Infinity;
 
-        foreach (CelestialBody body in universe.solarSystem.bodies)
+        foreach (CelestialBody body in selectedBodies)
         {
             float xCor = body.transform.position.x;
             float zCor = body.transform.position.z;
@@ -99,5 +114,61 @@ public class CameraHandler : MonoBehaviour
         Gizmos.DrawSphere(bottomRight, 1);
         Gizmos.DrawSphere(bottomLeft, 1);
         Gizmos.DrawSphere(topLeft, 1);
+
+        if (mouseDown != null && mouseUp != null)
+        {
+            Gizmos.DrawSphere(mouseDown, 2);
+            Gizmos.DrawSphere(mouseUp, 2);
+        }
+    }
+
+    /// <summary>
+    /// Calculates and returns the intersections between the mouse and the xz-plane
+    /// </summary>
+    /// <returns></returns>
+    private Vector3 GetIntersectXZPlane()
+    {
+        Vector3 mouse = Input.mousePosition;
+        Vector3 worldPoint = Camera.main.ScreenToWorldPoint(new Vector3(mouse.x, mouse.y, 10f));
+        Vector3 dir = worldPoint - transform.position;
+
+        // camera.y - alpha * dir.y = 0. Solve for alpha
+        float alpha = transform.position.y / dir.y;
+
+        return transform.position - alpha * dir;
+    }
+
+    /// <summary>
+    /// Get all bodies within the x and z range set by two vectors
+    /// </summary>
+    /// <param name="vector1"></param>
+    /// <param name="vector2"></param>
+    /// <returns></returns>
+    private List<CelestialBody> GetBodiesInRange(Vector3 vector1, Vector3 vector2)
+    {
+        float minX = Mathf.Min(vector1.x, vector2.x);
+        float maxX = Mathf.Max(vector1.x, vector2.x);
+        float minZ = Mathf.Min(vector1.z, vector2.z);
+        float maxZ = Mathf.Max(vector1.z, vector2.z);
+
+        List<CelestialBody> validBodies = new List<CelestialBody>();
+        foreach(CelestialBody body in universe.solarSystem.bodies)
+        {
+            float bodyX = body.transform.position.x;
+            float bodyZ = body.transform.position.z;
+
+            if(bodyX > minX && bodyX < maxX && bodyZ > minZ && bodyZ < maxZ)
+            {
+                validBodies.Add(body);
+            }
+        }
+
+        // If no bodies are selected, return the current selected bodies
+        if(validBodies.Count == 0)
+        {
+            return selectedBodies;
+        }
+
+        return validBodies;
     }
 }
