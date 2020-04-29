@@ -7,6 +7,7 @@ public class CameraHandler : MonoBehaviour
 {
     public Universe universe;
     public List<CelestialBody> selectedBodies;
+    public CelestialBody centeredBody;
 
     private Vector3 mouseDown;
     private Vector3 mouseUp;
@@ -42,14 +43,31 @@ public class CameraHandler : MonoBehaviour
         //https://en.wikipedia.org/wiki/Field_of_view_in_video_games#Field_of_view_calculations
         float fovHorizontal = 2 * Mathf.Atan(Mathf.Tan(fovVertical / 2) * Camera.main.aspect);
 
-        float xDist = coor[1] - coor[3];
-        float zDist = coor[0] - coor[2];
+        float xPos, zPos;
+        if (centeredBody == null)
+        {
+            // Middle of all the bodies
+            xPos = (coor[1] + coor[3]) / 2;
+            zPos = (coor[0] + coor[2]) / 2;
+        }
+        else
+        {
+            xPos = centeredBody.transform.position.x;
+            zPos = centeredBody.transform.position.z;
+        }
 
-        float xAvg = (coor[1] + coor[3]) / 2;
-        float zAvg = (coor[0] + coor[2]) / 2;
-    
-        float heightX = xDist / (2 * Mathf.Tan(fovHorizontal / 2)) ;
-        float heightZ = zDist / (2 * Mathf.Tan(fovVertical / 2));
+        float upDist = coor[0] - zPos;
+        float rightDist = coor[1] - xPos;
+        float downDist = zPos - coor[2];
+        float leftDist = xPos - coor[3];
+
+        // Get the max vertical and horizontal dist
+        float xDist = Mathf.Max(rightDist, leftDist);
+        float zDist = Mathf.Max(upDist, downDist);
+
+        // Get the height only looking at either the x or z coordinates
+        float heightX = xDist / (Mathf.Tan(fovHorizontal / 2));
+        float heightZ = zDist / (Mathf.Tan(fovVertical / 2));
 
         // Get the max height and at a little margin
         float height = Mathf.Max(heightX, heightZ) * 1.3f;
@@ -58,7 +76,7 @@ public class CameraHandler : MonoBehaviour
         // close to the celestial bodies.
         height = Mathf.Max(10f, height);
 
-        return new Vector3(xAvg, height, zAvg);
+        return new Vector3(xPos, height, zPos);
     }
 
     
@@ -174,7 +192,7 @@ public class CameraHandler : MonoBehaviour
     }
 
     public void HighlightBody()
-    {
+    { 
         Vector3 intersect = GetIntersectXZPlane();
 
         foreach(CelestialBody body in selectedBodies)
@@ -182,6 +200,22 @@ public class CameraHandler : MonoBehaviour
             if(Vector3.Distance(body.transform.position, intersect) < body.radius)
             {
                 Selection.activeGameObject = body.gameObject;
+                return;
+            }
+        }
+    }
+
+    public void SetCenterBody()
+    {
+
+        Vector3 intersect = GetIntersectXZPlane();
+
+        foreach (CelestialBody body in selectedBodies)
+        {
+            if (Vector3.Distance(body.transform.position, intersect) < body.radius)
+            {
+                Selection.activeGameObject = body.gameObject;
+                centeredBody = body;
                 return;
             }
         }

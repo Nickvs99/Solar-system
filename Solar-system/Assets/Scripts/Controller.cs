@@ -9,18 +9,31 @@ public class Controller : MonoBehaviour
 
     private float startClickTime;
 
-    private float HOLD_TIME = 0.2f;
+    private readonly float HOLD_TIME = 0.2f;
+    private readonly float DOUBLE_PRESS_TIME = 0.4f;
 
     void Start()
     {
         cameraScript = Camera.main.GetComponent<CameraHandler>();
+
+        startClickTime = Time.time;
     }
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            cameraScript.SetMouseDown();
+            float deltaTime = Time.time - startClickTime;
+
+            if(deltaTime < DOUBLE_PRESS_TIME)
+            {
+                cameraScript.SetCenterBody();
+            }
+            else
+            {
+                cameraScript.SetMouseDown();
+            }
             startClickTime = Time.time;
+
         }
         else if (Input.GetKeyUp(KeyCode.Mouse0))
         {

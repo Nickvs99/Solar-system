@@ -220,6 +220,11 @@ public class SolarSystem : MonoBehaviour
                 bodies.Remove(body);
                 Camera.main.GetComponent<CameraHandler>().selectedBodies.Remove(body);
                 Destroy(body.gameObject);
+
+                if(body == Camera.main.GetComponent<CameraHandler>().centeredBody)
+                {
+                    Camera.main.GetComponent<CameraHandler>().centeredBody = heaviestBody;
+                }
             }
         }
 
