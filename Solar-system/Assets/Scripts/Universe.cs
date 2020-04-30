@@ -17,7 +17,6 @@ public class Universe : MonoBehaviour
 
     void Start()
     {
-
         SetSeed();
 
         solarSystem.SpawnBodies(bodies, initial_size);
@@ -27,8 +26,7 @@ public class Universe : MonoBehaviour
     {
         if (playing)
         {
-            solarSystem.UpdateBodies();
-            solarSystem.CheckCollisions();
+            UpdateSystem();
         }
     }
 
@@ -62,7 +60,13 @@ public class Universe : MonoBehaviour
     public void ManualUpdate()
     {
         playing = false;
+        UpdateSystem();
+    }
+
+    void UpdateSystem()
+    {
         solarSystem.UpdateBodies();
         solarSystem.CheckCollisions();
+        Camera.main.GetComponent<CameraHandler>().UpdatePosition();
     }
 }

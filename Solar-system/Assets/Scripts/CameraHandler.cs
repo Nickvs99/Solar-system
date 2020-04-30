@@ -12,9 +12,9 @@ public class CameraHandler : MonoBehaviour
     private Vector3 mouseDown;
     private Vector3 mouseUp;
 
-    void Update()
+    public void UpdatePosition()
     {
-        this.transform.position = CalcPosition(); 
+        this.transform.position = CalcPosition();
     }
 
     public void SetMouseDown()
@@ -27,6 +27,8 @@ public class CameraHandler : MonoBehaviour
         mouseUp = GetIntersectXZPlane();
 
         selectedBodies = GetBodiesInRange(mouseDown, mouseUp);
+
+        UpdatePosition();
     }
 
     /// <summary>
@@ -222,6 +224,8 @@ public class CameraHandler : MonoBehaviour
                     centeredBody = body;
                 }
 
+                UpdatePosition();
+
                 return;
             }
         }
@@ -230,5 +234,6 @@ public class CameraHandler : MonoBehaviour
     public void ResetSelectedBodies()
     {
         selectedBodies = universe.solarSystem.bodies;
+        UpdatePosition();
     }
 }

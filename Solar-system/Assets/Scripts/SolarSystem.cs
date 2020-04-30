@@ -218,13 +218,19 @@ public class SolarSystem : MonoBehaviour
             if(body != heaviestBody)
             {
                 bodies.Remove(body);
-                Camera.main.GetComponent<CameraHandler>().selectedBodies.Remove(body);
                 Destroy(body.gameObject);
 
-                if(body == Camera.main.GetComponent<CameraHandler>().centeredBody)
+                CameraHandler cameraScript = Camera.main.GetComponent<CameraHandler>();
+                if (body == cameraScript.centeredBody)
                 {
-                    Camera.main.GetComponent<CameraHandler>().centeredBody = heaviestBody;
+                    cameraScript.centeredBody = heaviestBody;
                 }
+
+                if (cameraScript.selectedBodies.Contains(body) && !cameraScript.selectedBodies.Contains(heaviestBody))
+                {
+                    cameraScript.selectedBodies.Add(heaviestBody);
+                }
+                cameraScript.selectedBodies.Remove(body);
             }
         }
 
