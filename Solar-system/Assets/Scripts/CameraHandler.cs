@@ -207,15 +207,21 @@ public class CameraHandler : MonoBehaviour
 
     public void SetCenterBody()
     {
-
         Vector3 intersect = GetIntersectXZPlane();
 
         foreach (CelestialBody body in selectedBodies)
         {
             if (Vector3.Distance(body.transform.position, intersect) < body.radius)
             {
-                Selection.activeGameObject = body.gameObject;
-                centeredBody = body;
+                if (body == centeredBody)
+                {
+                    centeredBody = null;
+                }
+                else
+                {
+                    centeredBody = body;
+                }
+
                 return;
             }
         }
