@@ -61,5 +61,9 @@ public class Controller : MonoBehaviour
         {
             universe.ManualUpdate();
         }
+        else if (Input.GetKey(KeyCode.X))
+        {
+            cameraScript.ResetSelectedBodies();
+        }
     }
 }

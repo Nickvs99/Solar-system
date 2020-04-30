@@ -220,4 +220,9 @@ public class CameraHandler : MonoBehaviour
             }
         }
     }
+
+    public void ResetSelectedBodies()
+    {
+        selectedBodies = universe.solarSystem.bodies;
+    }
 }
