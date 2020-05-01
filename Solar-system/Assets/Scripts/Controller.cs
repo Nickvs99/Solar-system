@@ -57,11 +57,11 @@ public class Controller : MonoBehaviour
         {
             universe.FlipPlayState();
         }
-        else if (Input.GetKey(KeyCode.RightArrow))
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             universe.ManualUpdate();
         }
-        else if (Input.GetKey(KeyCode.X))
+        else if (Input.GetKeyDown(KeyCode.X))
         {
             cameraScript.ResetSelectedBodies();
         }
