@@ -12,6 +12,8 @@ public class CameraHandler : MonoBehaviour
     private Vector3 mouseDown;
     private Vector3 mouseUp;
 
+    private bool fixedHeight = false;
+
     public void UpdatePosition()
     {
         this.transform.position = CalcPosition();
@@ -58,21 +60,29 @@ public class CameraHandler : MonoBehaviour
             zPos = centeredBody.transform.position.z;
         }
 
-        float upDist = coor[0] - zPos;
-        float rightDist = coor[1] - xPos;
-        float downDist = zPos - coor[2];
-        float leftDist = xPos - coor[3];
+        float height;
+        if (fixedHeight)
+        {
+            height = this.transform.position.y;
+        }
+        else
+        {
+            float upDist = coor[0] - zPos;
+            float rightDist = coor[1] - xPos;
+            float downDist = zPos - coor[2];
+            float leftDist = xPos - coor[3];
 
-        // Get the max vertical and horizontal dist
-        float xDist = Mathf.Max(rightDist, leftDist);
-        float zDist = Mathf.Max(upDist, downDist);
+            // Get the max vertical and horizontal dist
+            float xDist = Mathf.Max(rightDist, leftDist);
+            float zDist = Mathf.Max(upDist, downDist);
 
-        // Get the height only looking at either the x or z coordinates
-        float heightX = xDist / (Mathf.Tan(fovHorizontal / 2));
-        float heightZ = zDist / (Mathf.Tan(fovVertical / 2));
+            // Get the height only looking at either the x or z coordinates
+            float heightX = xDist / (Mathf.Tan(fovHorizontal / 2));
+            float heightZ = zDist / (Mathf.Tan(fovVertical / 2));
 
-        // Get the max height and at a little margin
-        float height = Mathf.Max(heightX, heightZ) * 1.3f;
+            // Get the max height and at a little margin
+            height = Mathf.Max(heightX, heightZ) * 1.3f;
+        }
 
         // Minimal value, this removes the spasm when the camera is very
         // close to the celestial bodies.
@@ -235,5 +245,10 @@ public class CameraHandler : MonoBehaviour
     {
         selectedBodies = universe.solarSystem.bodies;
         UpdatePosition();
+    }
+
+    public void FlipFixedHeight()
+    {
+        fixedHeight = !fixedHeight;
     }
 }

@@ -24,7 +24,7 @@ public class Controller : MonoBehaviour
         {
             float deltaTime = Time.time - startClickTime;
 
-            if(deltaTime < DOUBLE_PRESS_TIME)
+            if (deltaTime < DOUBLE_PRESS_TIME)
             {
                 cameraScript.SetCenterBody();
             }
@@ -40,7 +40,7 @@ public class Controller : MonoBehaviour
             float endClickTime = Time.time;
             float deltaTime = endClickTime - startClickTime;
 
-            if(deltaTime < HOLD_TIME)
+            if (deltaTime < HOLD_TIME)
             {
                 cameraScript.HighlightBody();
             }
@@ -64,6 +64,10 @@ public class Controller : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.X))
         {
             cameraScript.ResetSelectedBodies();
+        }
+        else if (Input.GetKeyDown(KeyCode.H))
+        {
+            cameraScript.FlipFixedHeight();
         }
     }
 }
