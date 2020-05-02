@@ -87,7 +87,7 @@ public class Universe : MonoBehaviour
     private void OnValidate()
     {
         bodies = Mathf.Max(0, bodies);
-        initialSize = Mathf.Max(0, timeStep);
+        initialSize = Mathf.Max(0, initialSize);
         timeStep = Mathf.Max(0, timeStep);
         collisionCheckPerTimeStep = Mathf.Max(1, collisionCheckPerTimeStep);
     }
