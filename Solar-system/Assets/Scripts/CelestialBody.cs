@@ -24,7 +24,7 @@ public class CelestialBody : MonoBehaviour
 
     }
 
-    public void UpdateVelocity(List<CelestialBody> bodies)
+    public void UpdateVelocity(List<CelestialBody> bodies, float timeStep)
     {
         foreach (CelestialBody body in bodies)
         {
@@ -45,12 +45,12 @@ public class CelestialBody : MonoBehaviour
             Vector3 force = Constants.G * body.mass * this.mass / distSqr * dir;
             Vector3 acc = force / this.mass;
 
-            this.velocity += acc;
+            this.velocity += acc * timeStep;
         }
     }
 
-   public  void UpdatePosition()
+   public  void UpdatePosition(float timeStep)
     {
-        this.transform.position += this.velocity;
+        this.transform.position += this.velocity * timeStep;
     }
 }

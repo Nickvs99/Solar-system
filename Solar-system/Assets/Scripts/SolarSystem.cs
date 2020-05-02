@@ -36,16 +36,16 @@ public class SolarSystem : MonoBehaviour
         Camera.main.GetComponent<CameraHandler>().selectedBodies = bodies;
     }
    
-    public void UpdateBodies()
+    public void UpdateBodies(float timeStep)
     {
 
         foreach (CelestialBody body in bodies)
         {
-            body.UpdateVelocity(bodies);
+            body.UpdateVelocity(bodies, timeStep);
         }
         foreach (CelestialBody body in bodies)
         {
-            body.UpdatePosition();
+            body.UpdatePosition(timeStep);
         }    
     }
 

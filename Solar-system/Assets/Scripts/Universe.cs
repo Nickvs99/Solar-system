@@ -13,6 +13,11 @@ public class Universe : MonoBehaviour
     [Header("Seed generator")]
     public bool randomSeed;
     public int seed;
+
+    [Header("Physics engine")]
+    public float timeStep = 1f;                 // Speed of simulation
+    public int collisionCheckPerTimeStep = 1;   // Increase value to get a better precision
+
     private bool playing = true;
 
     void Start()
@@ -65,8 +70,23 @@ public class Universe : MonoBehaviour
 
     void UpdateSystem()
     {
-        solarSystem.UpdateBodies();
-        solarSystem.CheckCollisions();
+        int collisionsCheck = (int) Mathf.Ceil(timeStep * collisionCheckPerTimeStep);
+
+        // makes sure that at low timesteps there are still multiple collisions checks
+        collisionsCheck = Mathf.Max(collisionsCheck, collisionCheckPerTimeStep);
+
+        for (int i = 0; i < collisionsCheck; i++)
+        {
+            solarSystem.UpdateBodies(timeStep / collisionsCheck);
+            solarSystem.CheckCollisions();
+        }
+
         Camera.main.GetComponent<CameraHandler>().UpdatePosition();
+    }
+
+    private void OnValidate()
+    {
+        timeStep = Mathf.Max(0, timeStep);
+        collisionCheckPerTimeStep = Mathf.Max(1, collisionCheckPerTimeStep);
     }
 }
