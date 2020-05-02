@@ -8,7 +8,7 @@ public class Universe : MonoBehaviour
 
     [Header("Solar system properties")]
     public int bodies;
-    public float initial_size;
+    public float initialSize;
 
     [Header("Seed generator")]
     public bool randomSeed;
@@ -24,7 +24,7 @@ public class Universe : MonoBehaviour
     {
         SetSeed();
 
-        solarSystem.SpawnBodies(bodies, initial_size);
+        solarSystem.SpawnBodies(bodies, initialSize);
     }
 
     void Update()
@@ -39,7 +39,7 @@ public class Universe : MonoBehaviour
     {
         if (randomSeed)
         {
-            seed = (int) Random.Range(0, 2147483647);
+            seed = (int) Random.Range(-2147483647, 2147483647);
             Random.InitState(seed);
         }
         else
@@ -54,7 +54,7 @@ public class Universe : MonoBehaviour
     {
         SetSeed();
         solarSystem.ClearBodies();
-        solarSystem.SpawnBodies(bodies, initial_size);
+        solarSystem.SpawnBodies(bodies, initialSize);
     }
 
     public void FlipPlayState()
@@ -86,6 +86,8 @@ public class Universe : MonoBehaviour
 
     private void OnValidate()
     {
+        bodies = Mathf.Max(0, bodies);
+        initialSize = Mathf.Max(0, timeStep);
         timeStep = Mathf.Max(0, timeStep);
         collisionCheckPerTimeStep = Mathf.Max(1, collisionCheckPerTimeStep);
     }
