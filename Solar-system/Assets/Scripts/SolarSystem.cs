@@ -12,7 +12,7 @@ public class SolarSystem : MonoBehaviour
         bodies = new List<CelestialBody>();
     }
 
-    public void SpawnBodies(int n, float boxWidth)
+    public void SpawnBodiesBlock(int n, float boxWidth)
     {
         for(int i = 0; i < n; i++)
         {
@@ -36,6 +36,16 @@ public class SolarSystem : MonoBehaviour
         Camera.main.GetComponent<CameraHandler>().selectedBodies = bodies;
     }
    
+    public void SpawnBodiesOrbital()
+    {
+        // Temp 
+        CelestialBody body = Instantiate(bodyPrefab);
+        body.Initialize(new Vector3(0,0,0), new Vector3(0,0,0), 1f, 1f);
+        bodies.Add(body);
+        Camera.main.GetComponent<CameraHandler>().selectedBodies = bodies;
+
+        Debug.LogWarning("In progress");
+    }
     public void UpdateBodies(float timeStep)
     {
 

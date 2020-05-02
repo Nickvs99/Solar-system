@@ -51,7 +51,7 @@ public class Controller : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
-            universe.RespawnSystem();
+            universe.SpawnSystem();
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {

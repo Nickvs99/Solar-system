@@ -6,9 +6,20 @@ public class Universe : MonoBehaviour
 {
     public SolarSystem solarSystem;
 
-    [Header("Solar system properties")]
+    public enum SpawnMethods
+    {
+        SpawnBlock, 
+        SpawnOrbital
+    }
+
+    public SpawnMethods spawnmethod;
+
+    [Header("Spawn block properties")]
     public int bodies;
     public float initialSize;
+
+    [Header("Spawn orbital properties")]
+    public float temp;
 
     [Header("Seed generator")]
     public bool randomSeed;
@@ -22,9 +33,7 @@ public class Universe : MonoBehaviour
 
     void Start()
     {
-        SetSeed();
-
-        solarSystem.SpawnBodies(bodies, initialSize);
+        SpawnSystem();
     }
 
     void Update()
@@ -50,11 +59,21 @@ public class Universe : MonoBehaviour
         Debug.Log("SEED: " + seed);
     }
 
-    public void RespawnSystem()
+    public void SpawnSystem()
     {
         SetSeed();
         solarSystem.ClearBodies();
-        solarSystem.SpawnBodies(bodies, initialSize);
+
+        switch (spawnmethod)
+        {
+            case SpawnMethods.SpawnBlock:
+                solarSystem.SpawnBodiesBlock(bodies, initialSize);
+                break;
+            case SpawnMethods.SpawnOrbital:
+                solarSystem.SpawnBodiesOrbital();
+                break;
+        }
+
     }
 
     public void FlipPlayState()
