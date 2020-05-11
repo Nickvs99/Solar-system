@@ -38,11 +38,10 @@ public class SolarSystem : MonoBehaviour
    
     public void SpawnBodiesOrbital()
     {
-        // Temp 
-        CelestialBody body = Instantiate(bodyPrefab);
-        body.Initialize(new Vector3(0,0,0), new Vector3(0,0,0), 1f, 1f);
-        bodies.Add(body);
+
         Camera.main.GetComponent<CameraHandler>().selectedBodies = bodies;
+
+        SpawnSun();
 
         Debug.LogWarning("In progress");
     }
@@ -67,7 +66,7 @@ public class SolarSystem : MonoBehaviour
         }
         bodies = new List<CelestialBody>();
     }
-
+    
     public Vector3 CalcCenterOfMass(HashSet<CelestialBody> group)
     {
         Vector3 com = new Vector3(0f, 0f,0f);
@@ -85,7 +84,7 @@ public class SolarSystem : MonoBehaviour
     {
         List<HashSet<CelestialBody>> collisionGroups = GetCollisionGroups();
 
-        VisualisizeGroups(collisionGroups);
+        //VisualisizeGroups(collisionGroups);
         
         foreach (HashSet<CelestialBody> group in collisionGroups)
         {
@@ -265,6 +264,17 @@ public class SolarSystem : MonoBehaviour
 
         return heavistBody;
 
+    }
+
+    public void SpawnSun(){
+
+        float mass = Distribution.GenerateSolarMass();
+        
+        CelestialBody body = Instantiate(bodyPrefab);
+        body.Initialize(new Vector3(0,0,0), new Vector3(0,0,0), mass, 1f);
+        bodies.Add(body);
+
+        body.GetComponent<Renderer>().material.color = Color.yellow;
     }
 }
 
