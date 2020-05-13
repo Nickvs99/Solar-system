@@ -8,6 +8,7 @@ public class CameraHandler : MonoBehaviour
     public Universe universe;
     public List<CelestialBody> selectedBodies;
     public CelestialBody centeredBody;
+    public bool fixedToOrigin = false;
 
     private Vector3 mouseDown;
     private Vector3 mouseUp;
@@ -29,7 +30,8 @@ public class CameraHandler : MonoBehaviour
         mouseUp = GetIntersectXZPlane();
 
         selectedBodies = GetBodiesInRange(mouseDown, mouseUp);
-
+        fixedToOrigin = false;
+        
         UpdatePosition();
     }
 
@@ -48,7 +50,11 @@ public class CameraHandler : MonoBehaviour
         float fovHorizontal = 2 * Mathf.Atan(Mathf.Tan(fovVertical / 2) * Camera.main.aspect);
 
         float xPos, zPos;
-        if (centeredBody == null)
+        if(fixedToOrigin){
+            xPos = 0;
+            zPos = 0;
+        }
+        else if (centeredBody == null)
         {
             // Middle of all the bodies
             xPos = (coor[1] + coor[3]) / 2;
@@ -232,6 +238,7 @@ public class CameraHandler : MonoBehaviour
                 else
                 {
                     centeredBody = body;
+                    fixedToOrigin = false;
                 }
 
                 UpdatePosition();
@@ -250,5 +257,10 @@ public class CameraHandler : MonoBehaviour
     public void FlipFixedHeight()
     {
         fixedHeight = !fixedHeight;
+    }
+
+    public void SetOrigin(){
+        fixedToOrigin = true;
+        centeredBody = null;
     }
 }

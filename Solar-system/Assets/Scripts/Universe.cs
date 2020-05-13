@@ -70,6 +70,7 @@ public class Universe : MonoBehaviour
                 solarSystem.SpawnBodiesBlock(bodies, initialSize);
                 break;
             case SpawnMethods.SpawnOrbital:
+                Camera.main.GetComponent<CameraHandler>().SetOrigin();
                 solarSystem.SpawnBodiesOrbital();
                 break;
         }

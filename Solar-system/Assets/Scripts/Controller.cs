@@ -69,5 +69,8 @@ public class Controller : MonoBehaviour
         {
             cameraScript.FlipFixedHeight();
         }
+        else if(Input.GetKeyDown(KeyCode.O)){
+            cameraScript.SetOrigin();
+        }
     }
 }
