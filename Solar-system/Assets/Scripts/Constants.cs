@@ -8,4 +8,5 @@ public static class Constants
     public static float SolarMass = 100f; // Mean solar mass
     public static float BinaryDistance = 100f; // Mean planet mass fraction of solar mass
 
+    public static float density = 3f; // Temp, while density does not change per body
 }

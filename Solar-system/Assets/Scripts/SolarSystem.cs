@@ -26,7 +26,7 @@ public class SolarSystem : MonoBehaviour
 
             float mass = Random.Range(1f, 10f);
           
-            SpawnBody(new Vector3(x, 0, z), new Vector3(v_x, 0f, v_z), mass, 1f);
+            SpawnBody(new Vector3(x, 0, z), new Vector3(v_x, 0f, v_z), mass, Constants.density);
         }
 
         Camera.main.GetComponent<CameraHandler>().selectedBodies = bodies;
@@ -268,7 +268,7 @@ public class SolarSystem : MonoBehaviour
             // Spawn single sun
             float mass = Distribution.GenerateSolarMass();
             
-            CelestialBody body = SpawnBody(new Vector3(0,0,0), new Vector3(0,0,0), mass, 1f);
+            CelestialBody body = SpawnBody(new Vector3(0,0,0), new Vector3(0,0,0), mass, Constants.density);
 
             body.GetComponent<Renderer>().material.color = Color.yellow;
         } else {
@@ -285,11 +285,14 @@ public class SolarSystem : MonoBehaviour
             float dist2 = dist * mass1 / totalMass;
 
             // Calculate the speed of the bodies, derived from keplers third law. Circular orbits
-            float v1 = Mathf.Sqrt(Mathf.Pow(mass2, 3) * Constants.G / (Mathf.Pow(totalMass, 2) * dist1));
-            float v2 = Mathf.Sqrt(Mathf.Pow(mass1, 3) * Constants.G / (Mathf.Pow(totalMass, 2) * dist2));
+            float v1Mag = Mathf.Sqrt(Mathf.Pow(mass2, 3) * Constants.G / (Mathf.Pow(totalMass, 2) * dist1));
+            float v2Mag = Mathf.Sqrt(Mathf.Pow(mass1, 3) * Constants.G / (Mathf.Pow(totalMass, 2) * dist2));
 
-            CelestialBody body1 = SpawnBody(new Vector3(dist1, 0, 0), new Vector3(0,0,v1), mass1, 1f);
-            CelestialBody body2 = SpawnBody(new Vector3(-dist2, 0, 0), new Vector3(0,0,-v2), mass2, 1f);
+            Vector3 v1 = new Vector3(0,0, v1Mag);
+            Vector3 v2 = new Vector3(0,0, -v2Mag);
+
+            CelestialBody body1 = SpawnBody(new Vector3(dist1, 0, 0), v1, mass1, Constants.density);
+            CelestialBody body2 = SpawnBody(new Vector3(-dist2, 0, 0), v2, mass2, Constants.density);
 
             body1.GetComponent<Renderer>().material.color = Color.yellow;
             body2.GetComponent<Renderer>().material.color = Color.yellow;
