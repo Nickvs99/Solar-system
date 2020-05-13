@@ -14,9 +14,18 @@ public static class Distribution {
         return (mu + sigma * n);
     }
 
+    public static float GenerateLogNormalValue(float mu, float sigma)
+    {
+        return Mathf.Pow(10, GenerateNormalValue(mu, sigma));
+    }
+    
     public static float GenerateSolarMass()
     {   
-        float r = GenerateNormalValue(0f, 0.7f);
-        return Mathf.Pow(10, r) * Constants.SolarMass;
+        return GenerateLogNormalValue(0f, 0.7f) * Constants.SolarMass;
+    }
+
+    public static float GenerateDistBinarySystem()
+    {
+        return GenerateLogNormalValue(0f, 0.4f) * Constants.BinaryDistance;
     }
 }

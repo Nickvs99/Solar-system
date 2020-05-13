@@ -16,8 +16,6 @@ public class SolarSystem : MonoBehaviour
     {
         for(int i = 0; i < n; i++)
         {
-            CelestialBody body = Instantiate(bodyPrefab);
-
             float x = Random.Range(0, boxWidth);
             float z = Random.Range(0, boxWidth);
 
@@ -28,9 +26,7 @@ public class SolarSystem : MonoBehaviour
 
             float mass = Random.Range(1f, 10f);
           
-            body.Initialize(new Vector3(x, 0, z), new Vector3(v_x, 0f, v_z), mass, 1f);
-
-            bodies.Add(body);
+            SpawnBody(new Vector3(x, 0, z), new Vector3(v_x, 0f, v_z), mass, 1f);
         }
 
         Camera.main.GetComponent<CameraHandler>().selectedBodies = bodies;
@@ -41,7 +37,7 @@ public class SolarSystem : MonoBehaviour
 
         Camera.main.GetComponent<CameraHandler>().selectedBodies = bodies;
 
-        SpawnSun();
+        SpawnStars();
 
         Debug.LogWarning("In progress");
     }
@@ -129,8 +125,6 @@ public class SolarSystem : MonoBehaviour
             {
                 continue;
             }
-            item.Key.GetComponent<Renderer>().material.color = Color.red;
-
             HashSet<CelestialBody> group = GetBodies(item.Key, collisions, checkedBodies);
             collisionGroups.Add(group);
         }
@@ -266,15 +260,49 @@ public class SolarSystem : MonoBehaviour
 
     }
 
-    public void SpawnSun(){
+    public void SpawnStars(){
 
-        float mass = Distribution.GenerateSolarMass();
-        
+        float r = Random.Range(0f,1f);
+        if (r < 0.5)
+        {
+            // Spawn single sun
+            float mass = Distribution.GenerateSolarMass();
+            
+            CelestialBody body = SpawnBody(new Vector3(0,0,0), new Vector3(0,0,0), mass, 1f);
+
+            body.GetComponent<Renderer>().material.color = Color.yellow;
+        } else {
+            // Spawn binary system
+
+            float dist = Distribution.GenerateDistBinarySystem();
+
+            float mass1 = Distribution.GenerateSolarMass();
+            float mass2 = Distribution.GenerateSolarMass();
+
+            float totalMass = mass1 + mass2;
+
+            float dist1 = dist * mass2 / totalMass;
+            float dist2 = dist * mass1 / totalMass;
+
+            // Calculate the speed of the bodies, derived from keplers third law. Circular orbits
+            float v1 = Mathf.Sqrt(Mathf.Pow(mass2, 3) * Constants.G / (Mathf.Pow(totalMass, 2) * dist1));
+            float v2 = Mathf.Sqrt(Mathf.Pow(mass1, 3) * Constants.G / (Mathf.Pow(totalMass, 2) * dist2));
+
+            CelestialBody body1 = SpawnBody(new Vector3(dist1, 0, 0), new Vector3(0,0,v1), mass1, 1f);
+            CelestialBody body2 = SpawnBody(new Vector3(-dist2, 0, 0), new Vector3(0,0,-v2), mass2, 1f);
+
+            body1.GetComponent<Renderer>().material.color = Color.yellow;
+            body2.GetComponent<Renderer>().material.color = Color.yellow;
+        }
+    }
+
+    public CelestialBody SpawnBody(Vector3 pos, Vector3 vel, float mass, float density)
+    {
         CelestialBody body = Instantiate(bodyPrefab);
-        body.Initialize(new Vector3(0,0,0), new Vector3(0,0,0), mass, 1f);
+        body.Initialize(pos, vel, mass, density);
         bodies.Add(body);
 
-        body.GetComponent<Renderer>().material.color = Color.yellow;
+        return body;
     }
 }
 
