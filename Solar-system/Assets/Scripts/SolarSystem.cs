@@ -39,6 +39,8 @@ public class SolarSystem : MonoBehaviour
 
         SpawnStars();
 
+        SpawnPlanets();
+
         Debug.LogWarning("In progress");
     }
     public void UpdateBodies(float timeStep)
@@ -299,6 +301,54 @@ public class SolarSystem : MonoBehaviour
         }
     }
 
+    public void SpawnPlanets(){
+
+        float distFromOrigin = GetMaxSemiMajorAxisSuns();
+
+        float sunMasses = GetTotalSunMass();
+        int n = 0;
+        while(n < 2 || Random.Range(0f,1f) < 0.6f){
+            
+            distFromOrigin += Distribution.GenerateSemiMajorAddition();
+
+            float theta = Random.Range(0,360f);
+
+            float x = Mathf.Cos(theta) * distFromOrigin;
+            float z = Mathf.Sin(theta) * distFromOrigin;
+
+            Vector3 pos = new Vector3(x, 0, z);
+
+            float vMag = CalcOrbitalVelocity(distFromOrigin, sunMasses);
+
+            Vector3 vel = Vector3.Cross(pos, new Vector3(0,1,0)).normalized * vMag;
+
+            float mass = Distribution.GeneratePlanetMass();
+
+            SpawnBody(pos, vel, mass, Constants.density);
+            n++;
+        }
+    }
+
+    public float GetTotalSunMass(){
+        float totalMass = 0;
+        foreach(CelestialBody body in bodies){
+            totalMass += body.mass;
+        }
+        return totalMass;
+    }
+
+    public float GetMaxSemiMajorAxisSuns(){
+
+        float[] semiMajorAxises = new float[bodies.Count];
+
+        for(int i = 0; i< bodies.Count; i++){
+
+            semiMajorAxises[i] = Vector3.Distance(new Vector3(0,0,0), bodies[i].transform.position);
+        }
+
+        return Mathf.Max(semiMajorAxises);
+    }
+
     public CelestialBody SpawnBody(Vector3 pos, Vector3 vel, float mass, float density)
     {
         CelestialBody body = Instantiate(bodyPrefab);
@@ -306,6 +356,17 @@ public class SolarSystem : MonoBehaviour
         bodies.Add(body);
 
         return body;
+    }
+
+    public float CalcOrbitalVelocity(float dist, float bigMass)
+    {
+        return Mathf.Sqrt(Constants.G * bigMass / dist);
+    }
+
+    public void OnDrawGizmos(){
+        foreach(CelestialBody body in bodies){
+            Gizmos.DrawSphere(body.transform.position, 20f);
+        }
     }
 }
 

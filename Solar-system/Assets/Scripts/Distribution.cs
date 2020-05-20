@@ -28,4 +28,14 @@ public static class Distribution {
     {
         return GenerateLogNormalValue(0f, 0.4f) * Constants.BinaryDistance;
     }
+
+    public static float GenerateSemiMajorAddition()
+    {
+        return GenerateLogNormalValue(0f, 0.5f) * Constants.PlanetDistance;
+    }
+
+    public static float GeneratePlanetMass()
+    {
+        return GenerateLogNormalValue(0f, 0.9f) * Constants.PlanetMass;
+    }
 }
