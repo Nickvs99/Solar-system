@@ -4,8 +4,16 @@ using UnityEngine;
 
 public class SolarSystem : MonoBehaviour
 {
-    public CelestialBody bodyPrefab;
+    public Star starPrefab;
+    public Planet planetPrefab;
+
     public List<CelestialBody> bodies = new List<CelestialBody>();
+
+    private enum BodyType
+    {
+        Star, 
+        Planet
+    }
 
     private void Awake()
     {
@@ -26,7 +34,7 @@ public class SolarSystem : MonoBehaviour
 
             float mass = Random.Range(1f, 10f);
           
-            SpawnBody(new Vector3(x, 0, z), new Vector3(v_x, 0f, v_z), mass, Constants.density);
+            SpawnBody(new Vector3(x, 0, z), new Vector3(v_x, 0f, v_z), mass, BodyType.Planet);
         }
 
         Camera.main.GetComponent<CameraHandler>().selectedBodies = bodies;
@@ -242,8 +250,16 @@ public class SolarSystem : MonoBehaviour
         Vector3 newVelocity = initMomentum / totalMass;
         avgDensity /= group.Count;
 
-
-        heaviestBody.Initialize(avgPosition, newVelocity, totalMass, avgDensity);
+        if(heaviestBody is Star)
+        {
+            Star body = (Star) heaviestBody;
+            body.Initialize(avgPosition, newVelocity, totalMass);
+        }
+        else if(heaviestBody is Planet)
+        {
+            Planet body = (Planet) heaviestBody;
+            body.Initialize(avgPosition, newVelocity, totalMass);
+        }
     }
 
     private CelestialBody GetHeavist(HashSet<CelestialBody> groupHashSet)
@@ -259,7 +275,6 @@ public class SolarSystem : MonoBehaviour
         }
 
         return heavistBody;
-
     }
 
     public void SpawnStars(){
@@ -270,9 +285,8 @@ public class SolarSystem : MonoBehaviour
             // Spawn single sun
             float mass = Distribution.GenerateSolarMass();
             
-            CelestialBody body = SpawnBody(new Vector3(0,0,0), new Vector3(0,0,0), mass, Constants.density);
+            SpawnBody(new Vector3(0,0,0), new Vector3(0,0,0), mass, BodyType.Star);
 
-            body.GetComponent<Renderer>().material.color = Color.yellow;
         } else {
             // Spawn binary system
 
@@ -293,11 +307,8 @@ public class SolarSystem : MonoBehaviour
             Vector3 v1 = new Vector3(0,0, v1Mag);
             Vector3 v2 = new Vector3(0,0, -v2Mag);
 
-            CelestialBody body1 = SpawnBody(new Vector3(dist1, 0, 0), v1, mass1, Constants.density);
-            CelestialBody body2 = SpawnBody(new Vector3(-dist2, 0, 0), v2, mass2, Constants.density);
-
-            body1.GetComponent<Renderer>().material.color = Color.yellow;
-            body2.GetComponent<Renderer>().material.color = Color.yellow;
+            SpawnBody(new Vector3(dist1, 0, 0), v1, mass1, BodyType.Star);
+            SpawnBody(new Vector3(-dist2, 0, 0), v2, mass2, BodyType.Star);
         }
     }
 
@@ -324,7 +335,7 @@ public class SolarSystem : MonoBehaviour
 
             float mass = Distribution.GeneratePlanetMass();
 
-            SpawnBody(pos, vel, mass, Constants.density);
+            SpawnBody(pos, vel, mass, BodyType.Planet);
             n++;
         }
     }
@@ -349,13 +360,20 @@ public class SolarSystem : MonoBehaviour
         return Mathf.Max(semiMajorAxises);
     }
 
-    public CelestialBody SpawnBody(Vector3 pos, Vector3 vel, float mass, float density)
+    private void SpawnBody(Vector3 pos, Vector3 vel, float mass, BodyType bodyType)
     {
-        CelestialBody body = Instantiate(bodyPrefab);
-        body.Initialize(pos, vel, mass, density);
-        bodies.Add(body);
-
-        return body;
+        if (bodyType == BodyType.Star)
+        {
+            Star body = Instantiate(starPrefab);
+            body.Initialize(pos, vel, mass);
+            bodies.Add(body);
+        }
+        else if(bodyType == BodyType.Planet)
+        {
+            Planet body = Instantiate(planetPrefab);
+            body.Initialize(pos, vel, mass);
+            bodies.Add(body);
+        }
     }
 
     public float CalcOrbitalVelocity(float dist, float bigMass)

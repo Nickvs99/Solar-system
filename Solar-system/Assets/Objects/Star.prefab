@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5598107496370058215}
   - component: {fileID: 5598107496370058214}
   - component: {fileID: 5598107496370058209}
-  - component: {fileID: 5598107496370058211}
+  - component: {fileID: -1663484713830856767}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -55,6 +55,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -79,7 +80,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &5598107496370058211
+--- !u!114 &-1663484713830856767
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -88,8 +89,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5598107496370058210}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 856f1d9f7a67beb469fb69ea07832546, type: 3}
+  m_Script: {fileID: 11500000, guid: 24e2fdc59fde95348810d03a96ad531d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   velocity: {x: 0, y: 0, z: 0}
-  mass: 1
+  mass: 0
+  density: 0
+  radius: 0
