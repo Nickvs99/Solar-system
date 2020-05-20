@@ -21,21 +21,21 @@ public static class Distribution {
     
     public static float GenerateSolarMass()
     {   
-        return GenerateLogNormalValue(0f, 0.7f) * Constants.SolarMass;
+        return GenerateLogNormalValue(0f, 0.7f) * 100f;
     }
 
     public static float GenerateDistBinarySystem()
     {
-        return GenerateLogNormalValue(0f, 0.4f) * Constants.BinaryDistance;
+        return GenerateLogNormalValue(0f, 0.4f) * 100f;
     }
 
     public static float GenerateSemiMajorAddition()
     {
-        return GenerateLogNormalValue(0f, 0.5f) * Constants.PlanetDistance;
+        return GenerateLogNormalValue(0f, 0.5f) * 100f;
     }
 
     public static float GeneratePlanetMass()
     {
-        return GenerateLogNormalValue(0f, 0.9f) * Constants.PlanetMass;
+        return GenerateLogNormalValue(0f, 0.9f) * 0.1f;
     }
 }
