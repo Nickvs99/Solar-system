@@ -6,7 +6,7 @@ public class Star : CelestialBody
 {
     public void Initialize(Vector3 _position, Vector3 _velocity, float _mass)
     {
-        density = 1f;
+        density = 0.1f;
 
         SetValues(_position, _velocity, _mass, density);
 

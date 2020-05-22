@@ -264,7 +264,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 10
-  far clip plane: 100000
+  far clip plane: 10000000
   field of view: 60.000004
   orthographic: 0
   orthographic size: 5
@@ -342,7 +342,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae2234d234c27141896d97d021709b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bodyPrefab: {fileID: 5598107496370058211, guid: e2d052f40789109468c5e70918edb52b,
+  starPrefab: {fileID: -1663484713830856767, guid: e2d052f40789109468c5e70918edb52b,
+    type: 3}
+  planetPrefab: {fileID: 8023342254670308121, guid: a2eba98e61e9f73419ba2553630c43d8,
     type: 3}
   bodies: []
 --- !u!4 &1069210266
@@ -452,6 +454,6 @@ MonoBehaviour:
   initialSize: 150
   temp: 0
   randomSeed: 1
-  seed: 237367304
+  seed: 1110139407
   timeStep: 1
   collisionCheckPerTimeStep: 1

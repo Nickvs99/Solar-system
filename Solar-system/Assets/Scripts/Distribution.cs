@@ -4,6 +4,7 @@ using UnityEngine;
 
 public static class Distribution {
     
+    private static bool avg = false;
     public static float GenerateNormalValue(float mu, float sigma)
     {
         float r1 = Random.Range(0.0f, 1.0f);
@@ -21,21 +22,37 @@ public static class Distribution {
     
     public static float GenerateSolarMass()
     {   
-        return GenerateLogNormalValue(0f, 0.7f) * 100f;
+        float avgSolarMass = Mathf.Pow(10, 10);
+        
+        if (avg) {return avgSolarMass;}
+
+        return GenerateLogNormalValue(0f, 0.7f) * avgSolarMass;
     }
 
     public static float GenerateDistBinarySystem()
     {
-        return GenerateLogNormalValue(0f, 0.4f) * 100f;
+        float avgDistBinarySystem = 20000f;
+
+        if (avg) {return avgDistBinarySystem;}
+
+        return GenerateLogNormalValue(0f, 0.4f) * avgDistBinarySystem;
     }
 
     public static float GenerateSemiMajorAddition()
     {
-        return GenerateLogNormalValue(0f, 0.5f) * 100f;
+        float avgAddition = 40000f;
+        
+        if (avg) {return avgAddition;}
+
+        return GenerateLogNormalValue(0f, 0.3f) * avgAddition;
     }
 
     public static float GeneratePlanetMass()
     {
-        return GenerateLogNormalValue(0f, 0.9f) * 0.1f;
+        float avgPlanetMass = Mathf.Pow(10, 7);
+
+        if (avg) {return avgPlanetMass;}
+
+        return GenerateLogNormalValue(0f, 0.9f) * avgPlanetMass;
     }
 }
