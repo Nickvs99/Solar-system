@@ -5,6 +5,8 @@ using UnityEngine;
 public static class Distribution {
     
     private static bool avg = false;
+    private static float starCutOff = 5 * Mathf.Pow(10, 8);
+    
     public static float GenerateNormalValue(float mu, float sigma)
     {
         float r1 = Random.Range(0.0f, 1.0f);
@@ -26,16 +28,29 @@ public static class Distribution {
         
         if (avg) {return avgSolarMass;}
 
-        return GenerateLogNormalValue(0f, 0.7f) * avgSolarMass;
+        float solarMass;
+        do {
+            solarMass = GenerateLogNormalValue(0f, 0.7f) * avgSolarMass;
+        }
+        while (solarMass < starCutOff);
+        
+        return solarMass;
     }
 
-    public static float GenerateDistBinarySystem()
+    public static float GenerateDistBinarySystem(float totalStarRadii)
     {
         float avgDistBinarySystem = 20000f;
 
         if (avg) {return avgDistBinarySystem;}
+        
+        // Makes sure the stars are at least further apart than there combine radii
+        float dist;
+        do {
+            dist = GenerateLogNormalValue(0f, 0.7f) * avgDistBinarySystem;
+        }
+        while (dist < totalStarRadii * 1.1f);
 
-        return GenerateLogNormalValue(0f, 0.4f) * avgDistBinarySystem;
+        return dist;
     }
 
     public static float GenerateSemiMajorAddition()
@@ -53,6 +68,12 @@ public static class Distribution {
 
         if (avg) {return avgPlanetMass;}
 
-        return GenerateLogNormalValue(0f, 0.9f) * avgPlanetMass;
+        float planetMass;
+        do {
+            planetMass = GenerateLogNormalValue(0f, 0.7f) * avgPlanetMass;
+        }
+        while (planetMass > starCutOff);
+
+        return planetMass;
     }
 }

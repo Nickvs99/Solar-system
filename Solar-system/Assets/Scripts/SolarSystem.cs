@@ -290,10 +290,15 @@ public class SolarSystem : MonoBehaviour
         } else {
             // Spawn binary system
 
-            float dist = Distribution.GenerateDistBinarySystem();
-
             float mass1 = Distribution.GenerateSolarMass();
             float mass2 = Distribution.GenerateSolarMass();
+
+            // Temp fixed value
+            float radius1 = starPrefab.CalcRadius(mass1, 0.1f);
+            float radius2 = starPrefab.CalcRadius(mass2, 0.1f);
+
+            float totalRadii = radius1 + radius2;
+            float dist = Distribution.GenerateDistBinarySystem(totalRadii);
 
             float totalMass = mass1 + mass2;
 
