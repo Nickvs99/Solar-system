@@ -92,9 +92,28 @@ public class CameraHandler : MonoBehaviour
 
         // Minimal value, this removes the spasm when the camera is very
         // close to the celestial bodies.
-        height = Mathf.Max(10f, height);
+        float minHeight = CalcMinHeight();
+        height = Mathf.Max(minHeight, height);
 
         return new Vector3(xPos, height, zPos);
+    }
+
+    private float CalcMinHeight(){
+        float maxRadius = GetMaxRadius();
+
+        float nearField = Camera.main.nearClipPlane;
+
+        return Mathf.Max(maxRadius, nearField) * 1.3f;
+    }
+
+    private float GetMaxRadius(){
+        float maxRadius = 0f;
+        foreach(CelestialBody body in selectedBodies){
+            if(body.radius > maxRadius){
+                maxRadius = body.radius;
+            }
+        }
+        return maxRadius;
     }
 
     
@@ -111,27 +130,31 @@ public class CameraHandler : MonoBehaviour
 
         foreach (CelestialBody body in selectedBodies)
         {
-            float xCor = body.transform.position.x;
-            float zCor = body.transform.position.z;
+            float r = body.radius;
 
-            if (xCor < leftCor)
+            float xCorRight = body.transform.position.x + r;
+            float xCorLeft = body.transform.position.x - r;
+            float zCorTop = body.transform.position.z + r;
+            float zCorBottom = body.transform.position.z - r;
+
+            if (xCorLeft < leftCor)
             {
-                leftCor = xCor;
+                leftCor = xCorLeft;
             }
 
-            if (xCor > rightCor)
+            if (xCorRight > rightCor)
             {
-                rightCor = xCor;
+                rightCor = xCorRight;
             }
 
-            if (zCor < bottomCor)
+            if (zCorBottom < bottomCor)
             {
-                bottomCor = zCor;
+                bottomCor = zCorBottom;
             }
 
-            if (zCor > topCor)
+            if (zCorTop > topCor)
             {
-                topCor = zCor;
+                topCor = zCorTop;
             }
         }
 
@@ -147,10 +170,11 @@ public class CameraHandler : MonoBehaviour
         Vector3 bottomLeft = new Vector3(coor[3], 0, coor[2]);
         Vector3 topLeft = new Vector3(coor[3], 0, coor[0]);
 
-        Gizmos.DrawSphere(topRight, 1);
-        Gizmos.DrawSphere(bottomRight, 1);
-        Gizmos.DrawSphere(bottomLeft, 1);
-        Gizmos.DrawSphere(topLeft, 1);
+        float size = 450f;
+        Gizmos.DrawSphere(topRight, size);
+        Gizmos.DrawSphere(bottomRight, size);
+        Gizmos.DrawSphere(bottomLeft, size);
+        Gizmos.DrawSphere(topLeft, size);
 
         if (mouseDown != null && mouseUp != null)
         {
