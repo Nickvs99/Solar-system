@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Planet : CelestialBody 
 {    
-    public void Initialize(Vector3 _position, Vector3 _velocity, float _mass)
+    public void Initialize()
     {    
+        mass = Distribution.GeneratePlanetMass();
+
         density = 0.01f;
 
-        SetValues(_position, _velocity, _mass, density);
+        radius = CalcRadius(mass, density);
     }
 }

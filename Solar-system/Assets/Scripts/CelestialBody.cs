@@ -9,16 +9,10 @@ public class CelestialBody : MonoBehaviour
     public float density;
     public float radius;
 
-    public void SetValues(Vector3 _position, Vector3 _velocity, float _mass, float density)
+    public void SetValues(Vector3 _position, Vector3 _velocity)
     {
-        transform.position = _position;
+        this.transform.position = _position;
         velocity = _velocity;
-        mass = _mass;
-
-        radius = CalcRadius(mass, density);
-
-        float diameter = 2 * radius;
-        transform.localScale = new Vector3(diameter, diameter, diameter);
     }
 
     public void UpdateVelocity(List<CelestialBody> bodies, float timeStep)
@@ -54,6 +48,12 @@ public class CelestialBody : MonoBehaviour
     public float CalcRadius(float mass, float density)
     {
         // M = 4/3 Pi r^3 * dens => r = (m * 3/ 4 / Pi / dens) ** 1/3
-        return Mathf.Pow(mass * 3 / 4 / Mathf.PI / density, 1f/3);
+        float radius = Mathf.Pow(mass * 3 / 4 / Mathf.PI / density, 1f/3);        
+        
+        // Temp, will be updated once I understand get/set
+        float diameter = 2 * radius;
+        transform.localScale = new Vector3(diameter, diameter, diameter);
+        
+        return radius;
     }
 }

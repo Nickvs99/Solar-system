@@ -451,9 +451,9 @@ MonoBehaviour:
   solarSystem: {fileID: 1069210265}
   spawnmethod: 1
   bodies: 15
-  initialSize: 150
+  initialSize: 150000
   temp: 0
   randomSeed: 1
-  seed: 1110139407
+  seed: 1602887195
   timeStep: 1
   collisionCheckPerTimeStep: 1

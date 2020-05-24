@@ -24,17 +24,18 @@ public class SolarSystem : MonoBehaviour
     {
         for(int i = 0; i < n; i++)
         {
+
+            Planet planet = SpawnPlanet();
+
             float x = Random.Range(0, boxWidth);
             float z = Random.Range(0, boxWidth);
 
             float angle = Random.Range(0, 2 * Mathf.PI);
-            float v_mag = Random.Range(0, 0.5f);
+            float v_mag = Random.Range(0, boxWidth / 1000f);
             float v_x = Mathf.Cos(angle) * v_mag;
             float v_z = Mathf.Sin(angle) * v_mag;
 
-            float mass = Random.Range(1f, 10f);
-          
-            SpawnBody(new Vector3(x, 0, z), new Vector3(v_x, 0f, v_z), mass, BodyType.Planet);
+            planet.SetValues(new Vector3(x, 0, z), new Vector3(v_x, 0f, v_z));
         }
 
         Camera.main.GetComponent<CameraHandler>().selectedBodies = bodies;
@@ -253,12 +254,12 @@ public class SolarSystem : MonoBehaviour
         if(heaviestBody is Star)
         {
             Star body = (Star) heaviestBody;
-            body.Initialize(avgPosition, newVelocity, totalMass);
+            body.SetValues(avgPosition, newVelocity);
         }
         else if(heaviestBody is Planet)
         {
             Planet body = (Planet) heaviestBody;
-            body.Initialize(avgPosition, newVelocity, totalMass);
+            body.SetValues(avgPosition, newVelocity);
         }
     }
 
@@ -283,37 +284,36 @@ public class SolarSystem : MonoBehaviour
         if (r < 0.5)
         {
             // Spawn single sun
-            float mass = Distribution.GenerateSolarMass();
             
-            SpawnBody(new Vector3(0,0,0), new Vector3(0,0,0), mass, BodyType.Star);
+            Star star = SpawnStar();
+            star.SetValues(new Vector3(0,0,0), new Vector3(0,0,0));
 
         } else {
             // Spawn binary system
 
-            float mass1 = Distribution.GenerateSolarMass();
-            float mass2 = Distribution.GenerateSolarMass();
+            Star star1 = SpawnStar();
+            Star star2 = SpawnStar();
 
-            // Temp fixed value
-            float radius1 = starPrefab.CalcRadius(mass1, 0.1f);
-            float radius2 = starPrefab.CalcRadius(mass2, 0.1f);
 
-            float totalRadii = radius1 + radius2;
+
+            float totalRadii = star1.radius + star2.radius;
             float dist = Distribution.GenerateDistBinarySystem(totalRadii);
 
-            float totalMass = mass1 + mass2;
+            float totalMass = star1.mass + star2.mass;
 
-            float dist1 = dist * mass2 / totalMass;
-            float dist2 = dist * mass1 / totalMass;
+            float dist1 = dist * star2.mass / totalMass;
+            float dist2 = dist * star1.mass / totalMass;
 
             // Calculate the speed of the bodies, derived from keplers third law. Circular orbits
-            float v1Mag = Mathf.Sqrt(Mathf.Pow(mass2, 3) * Constants.G / (Mathf.Pow(totalMass, 2) * dist1));
-            float v2Mag = Mathf.Sqrt(Mathf.Pow(mass1, 3) * Constants.G / (Mathf.Pow(totalMass, 2) * dist2));
+            float v1Mag = Mathf.Sqrt(Mathf.Pow(star2.mass, 3) * Constants.G / (Mathf.Pow(totalMass, 2) * dist1));
+            float v2Mag = Mathf.Sqrt(Mathf.Pow(star1.mass, 3) * Constants.G / (Mathf.Pow(totalMass, 2) * dist2));
 
             Vector3 v1 = new Vector3(0,0, v1Mag);
             Vector3 v2 = new Vector3(0,0, -v2Mag);
 
-            SpawnBody(new Vector3(dist1, 0, 0), v1, mass1, BodyType.Star);
-            SpawnBody(new Vector3(-dist2, 0, 0), v2, mass2, BodyType.Star);
+            star1.SetValues(new Vector3(dist1, 0 , 0), v1);    
+            star2.SetValues(new Vector3(-dist2, 0 , 0), v2);
+
         }
     }
 
@@ -325,6 +325,8 @@ public class SolarSystem : MonoBehaviour
         int n = 0;
         while(n < 2 || Random.Range(0f,1f) < 0.6f){
             
+            Planet planet = SpawnPlanet();
+
             distFromOrigin += Distribution.GenerateSemiMajorAddition();
 
             float theta = Random.Range(0,360f);
@@ -338,9 +340,7 @@ public class SolarSystem : MonoBehaviour
 
             Vector3 vel = Vector3.Cross(pos, new Vector3(0,1,0)).normalized * vMag;
 
-            float mass = Distribution.GeneratePlanetMass();
-
-            SpawnBody(pos, vel, mass, BodyType.Planet);
+            planet.SetValues(pos, vel);
             n++;
         }
     }
@@ -365,20 +365,18 @@ public class SolarSystem : MonoBehaviour
         return Mathf.Max(semiMajorAxises);
     }
 
-    private void SpawnBody(Vector3 pos, Vector3 vel, float mass, BodyType bodyType)
-    {
-        if (bodyType == BodyType.Star)
-        {
-            Star body = Instantiate(starPrefab);
-            body.Initialize(pos, vel, mass);
-            bodies.Add(body);
-        }
-        else if(bodyType == BodyType.Planet)
-        {
-            Planet body = Instantiate(planetPrefab);
-            body.Initialize(pos, vel, mass);
-            bodies.Add(body);
-        }
+    private Star SpawnStar(){
+        Star star = Instantiate(starPrefab);
+        star.Initialize();
+        bodies.Add(star);
+        return star;
+    }
+
+    private Planet SpawnPlanet(){
+        Planet planet = Instantiate(planetPrefab);
+        planet.Initialize();
+        bodies.Add(planet);
+        return planet;
     }
 
     public float CalcOrbitalVelocity(float dist, float bigMass)

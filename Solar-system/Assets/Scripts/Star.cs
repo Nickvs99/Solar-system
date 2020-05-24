@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Star : CelestialBody
 {
-    public void Initialize(Vector3 _position, Vector3 _velocity, float _mass)
+    public void Initialize()
     {
+        mass = Distribution.GenerateSolarMass();
+
         density = 0.1f;
 
-        SetValues(_position, _velocity, _mass, density);
-
+        radius = CalcRadius(mass, density);
+        
         this.GetComponent<Renderer>().material.color = Color.yellow;
     }
 }
