@@ -386,7 +386,14 @@ public class SolarSystem : MonoBehaviour
 
     public void OnDrawGizmos(){
         foreach(CelestialBody body in bodies){
-            Gizmos.DrawSphere(body.transform.position, 20f);
+            Vector3 pos = body.transform.position;
+            if(body is Star){
+                Gizmos.color = Color.yellow;
+            }
+            else {
+                Gizmos.color = Color.gray;
+            }
+            Gizmos.DrawSphere(pos, Utility.GizmoRadius(pos, 0.025f));
         }
     }
 }

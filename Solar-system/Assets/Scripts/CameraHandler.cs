@@ -165,21 +165,16 @@ public class CameraHandler : MonoBehaviour
     {
         float[] coor = CalcBoundaries();
 
-        Vector3 topRight = new Vector3(coor[1], 0, coor[0]);
-        Vector3 bottomRight = new Vector3(coor[1], 0, coor[2]);
-        Vector3 bottomLeft = new Vector3(coor[3], 0, coor[2]);
-        Vector3 topLeft = new Vector3(coor[3], 0, coor[0]);
+        Vector3[] corners = new Vector3[4]{
 
-        float size = 450f;
-        Gizmos.DrawSphere(topRight, size);
-        Gizmos.DrawSphere(bottomRight, size);
-        Gizmos.DrawSphere(bottomLeft, size);
-        Gizmos.DrawSphere(topLeft, size);
+            new Vector3(coor[1], 0, coor[0]),       //top right
+            new Vector3(coor[1], 0, coor[2]),       //bottom right
+            new Vector3(coor[3], 0, coor[2]),       //bottom left
+            new Vector3(coor[3], 0, coor[0])        //top left
+        };
 
-        if (mouseDown != null && mouseUp != null)
-        {
-            Gizmos.DrawSphere(mouseDown, 2);
-            Gizmos.DrawSphere(mouseUp, 2);
+        foreach(Vector3 corner in corners){
+            Gizmos.DrawSphere(corner, Utility.GizmoRadius(corner, 0.01f));
         }
     }
 
