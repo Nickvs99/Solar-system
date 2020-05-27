@@ -6,14 +6,15 @@ using UnityEditor;
 public class CameraHandler : MonoBehaviour
 {
     public Universe universe;
-    public List<CelestialBody> selectedBodies;
-    public CelestialBody centeredBody;
-    public bool fixedToOrigin = false;
 
-    private Vector3 mouseDown;
-    private Vector3 mouseUp;
+    public List<CelestialBody> selectedBodies {get; set;}
+    public CelestialBody centeredBody {get; set;}
+    
+    public bool fixedToOrigin {get; set;} = false;
+    public Vector3 mouseDown {get; set;}
+    public Vector3 mouseUp {get; set;}
 
-    private bool fixedHeight = false;
+    public bool fixedHeight {get; set;} = false;
 
     public void UpdatePosition()
     {
@@ -109,8 +110,8 @@ public class CameraHandler : MonoBehaviour
     private float GetMaxRadius(){
         float maxRadius = 0f;
         foreach(CelestialBody body in selectedBodies){
-            if(body.radius > maxRadius){
-                maxRadius = body.radius;
+            if(body.Radius > maxRadius){
+                maxRadius = body.Radius;
             }
         }
         return maxRadius;
@@ -130,7 +131,7 @@ public class CameraHandler : MonoBehaviour
 
         foreach (CelestialBody body in selectedBodies)
         {
-            float r = body.radius;
+            float r = body.Radius;
 
             float xCorRight = body.transform.position.x + r;
             float xCorLeft = body.transform.position.x - r;
@@ -234,7 +235,7 @@ public class CameraHandler : MonoBehaviour
 
         foreach(CelestialBody body in selectedBodies)
         {
-            if(Vector3.Distance(body.transform.position, intersect) < body.radius)
+            if(Vector3.Distance(body.transform.position, intersect) < body.Radius)
             {
                 Selection.activeGameObject = body.gameObject;
                 return;
@@ -248,7 +249,7 @@ public class CameraHandler : MonoBehaviour
 
         foreach (CelestialBody body in selectedBodies)
         {
-            if (Vector3.Distance(body.transform.position, intersect) < body.radius)
+            if (Vector3.Distance(body.transform.position, intersect) < body.Radius)
             {
                 if (body == centeredBody)
                 {

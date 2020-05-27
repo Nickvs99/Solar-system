@@ -4,21 +4,13 @@ using UnityEngine;
 
 public class SolarSystem : MonoBehaviour
 {
-    public Star starPrefab;
-    public Planet planetPrefab;
+    [SerializeField]
+    private Star starPrefab;
 
-    public List<CelestialBody> bodies = new List<CelestialBody>();
+    [SerializeField]
+    private Planet planetPrefab;
 
-    private enum BodyType
-    {
-        Star, 
-        Planet
-    }
-
-    private void Awake()
-    {
-        bodies = new List<CelestialBody>();
-    }
+    public List<CelestialBody> bodies  {get; set;} = new List<CelestialBody>();
 
     public void SpawnBodiesBlock(int n, float boxWidth)
     {
@@ -80,8 +72,8 @@ public class SolarSystem : MonoBehaviour
         float totalMass = 0;
         foreach(CelestialBody body in group)
         {
-            com += body.transform.position * body.mass;
-            totalMass += body.mass;
+            com += body.transform.position * body.Mass;
+            totalMass += body.Mass;
         }
 
         return com / totalMass;
@@ -119,7 +111,7 @@ public class SolarSystem : MonoBehaviour
         {
             for (int j = i + 1; j < bodies.Count; j++)
             {
-                if (Vector3.Distance(bodies[i].transform.position, bodies[j].transform.position) < bodies[i].radius + bodies[j].radius)
+                if (Vector3.Distance(bodies[i].transform.position, bodies[j].transform.position) < bodies[i].Radius + bodies[j].Radius)
                 {
                     collisions[bodies[i]].Add(bodies[j]);
                     collisions[bodies[j]].Add(bodies[i]);
@@ -225,9 +217,9 @@ public class SolarSystem : MonoBehaviour
 
         foreach(CelestialBody body in group)
         {
-            totalMass += body.mass;
-            initMomentum += body.mass * body.velocity;
-            avgDensity += body.density;
+            totalMass += body.Mass;
+            initMomentum += body.Mass * body.Velocity;
+            avgDensity += body.Density;
             
             if(body != heaviestBody)
             {
@@ -269,7 +261,7 @@ public class SolarSystem : MonoBehaviour
         CelestialBody heavistBody = group[0];
         for(int i = 1; i < group.Count; i++)
         {
-            if(group[i].mass > heavistBody.mass)
+            if(group[i].Mass > heavistBody.Mass)
             {
                 heavistBody = group[i];
             }
@@ -294,19 +286,17 @@ public class SolarSystem : MonoBehaviour
             Star star1 = SpawnStar();
             Star star2 = SpawnStar();
 
-
-
-            float totalRadii = star1.radius + star2.radius;
+            float totalRadii = star1.Radius + star2.Radius;
             float dist = Distribution.GenerateDistBinarySystem(totalRadii);
 
-            float totalMass = star1.mass + star2.mass;
+            float totalMass = star1.Mass + star2.Mass;
 
-            float dist1 = dist * star2.mass / totalMass;
-            float dist2 = dist * star1.mass / totalMass;
+            float dist1 = dist * star2.Mass / totalMass;
+            float dist2 = dist * star1.Mass / totalMass;
 
             // Calculate the speed of the bodies, derived from keplers third law. Circular orbits
-            float v1Mag = Mathf.Sqrt(Mathf.Pow(star2.mass, 3) * Constants.G / (Mathf.Pow(totalMass, 2) * dist1));
-            float v2Mag = Mathf.Sqrt(Mathf.Pow(star1.mass, 3) * Constants.G / (Mathf.Pow(totalMass, 2) * dist2));
+            float v1Mag = Mathf.Sqrt(Mathf.Pow(star2.Mass, 3) * Constants.G / (Mathf.Pow(totalMass, 2) * dist1));
+            float v2Mag = Mathf.Sqrt(Mathf.Pow(star1.Mass, 3) * Constants.G / (Mathf.Pow(totalMass, 2) * dist2));
 
             Vector3 v1 = new Vector3(0,0, v1Mag);
             Vector3 v2 = new Vector3(0,0, -v2Mag);
@@ -348,7 +338,7 @@ public class SolarSystem : MonoBehaviour
     public float GetTotalSunMass(){
         float totalMass = 0;
         foreach(CelestialBody body in bodies){
-            totalMass += body.mass;
+            totalMass += body.Mass;
         }
         return totalMass;
     }
@@ -396,5 +386,6 @@ public class SolarSystem : MonoBehaviour
             Gizmos.DrawSphere(pos, Utility.GizmoRadius(pos, 0.025f));
         }
     }
+
 }
 

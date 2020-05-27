@@ -4,10 +4,55 @@ using UnityEngine;
 
 public class CelestialBody : MonoBehaviour
 {
-    public Vector3 velocity;
-    public float mass;
-    public float density;
-    public float radius;
+
+    // NOTE The use of auto-implemented properies are not used, since they won't
+    // show up in the inspector
+    [SerializeField]
+    private Vector3 velocity;
+    public Vector3 Velocity 
+    {
+        get {
+            return velocity;
+        } 
+        set {
+            velocity = value;
+        }
+    }
+
+    [SerializeField]
+    private float mass;
+    public float Mass 
+    {
+        get {
+            return mass;
+        } 
+        set {
+            mass = value;
+        }
+    }
+
+    [SerializeField]
+    private float density;
+    public float Density 
+    {
+        get {
+            return density;
+        } set{
+            density = value;
+        }
+    }
+
+    [SerializeField]
+    private float radius;
+    public float Radius
+    {
+        get {
+            return radius;
+        }
+        set {
+            radius = value;
+        }
+    }
 
     public void SetValues(Vector3 _position, Vector3 _velocity)
     {

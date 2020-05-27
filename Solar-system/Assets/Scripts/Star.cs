@@ -6,11 +6,11 @@ public class Star : CelestialBody
 {
     public void Initialize()
     {
-        mass = Distribution.GenerateSolarMass();
+        Mass = Distribution.GenerateSolarMass();
 
-        density = 0.1f;
+        Density = 0.1f;
 
-        radius = CalcRadius(mass, density);
+        Radius = CalcRadius(Mass, Density);
         
         this.GetComponent<Renderer>().material.color = Color.yellow;
     }

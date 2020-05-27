@@ -310,9 +310,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   universe: {fileID: 1507293418}
-  selectedBodies: []
-  centeredBody: {fileID: 0}
-  fixedToOrigin: 0
 --- !u!1 &1069210264
 GameObject:
   m_ObjectHideFlags: 0
@@ -346,7 +343,6 @@ MonoBehaviour:
     type: 3}
   planetPrefab: {fileID: 8023342254670308121, guid: a2eba98e61e9f73419ba2553630c43d8,
     type: 3}
-  bodies: []
 --- !u!4 &1069210266
 Transform:
   m_ObjectHideFlags: 0
@@ -354,7 +350,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1069210264}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.90300393, y: 0, z: -20.628027}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -454,6 +450,6 @@ MonoBehaviour:
   initialSize: 150000
   temp: 0
   randomSeed: 1
-  seed: 1602887195
+  seed: 0
   timeStep: 1
   collisionCheckPerTimeStep: 1

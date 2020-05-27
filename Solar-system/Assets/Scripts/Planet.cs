@@ -6,10 +6,10 @@ public class Planet : CelestialBody
 {    
     public void Initialize()
     {    
-        mass = Distribution.GeneratePlanetMass();
+        Mass = Distribution.GeneratePlanetMass();
 
-        density = 0.01f;
+        Density = 0.01f;
 
-        radius = CalcRadius(mass, density);
+        Radius = CalcRadius(Mass, Density);
     }
 }
