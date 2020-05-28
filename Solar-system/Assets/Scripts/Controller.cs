@@ -46,7 +46,7 @@ public class Controller : MonoBehaviour
             }
             else
             {
-                cameraScript.UpdateSelectedBodies();
+                cameraScript.SetMouseUp();
             }
         }
         else if (Input.GetKeyDown(KeyCode.Space))

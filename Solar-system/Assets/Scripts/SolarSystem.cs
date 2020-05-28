@@ -227,9 +227,9 @@ public class SolarSystem : MonoBehaviour
                 Destroy(body.gameObject);
 
                 CameraHandler cameraScript = Camera.main.GetComponent<CameraHandler>();
-                if (body == cameraScript.centeredBody)
+                if (body == cameraScript.CenteredBody)
                 {
-                    cameraScript.centeredBody = heaviestBody;
+                    cameraScript.CenteredBody = heaviestBody;
                 }
 
                 if (cameraScript.selectedBodies.Contains(body) && !cameraScript.selectedBodies.Contains(heaviestBody))

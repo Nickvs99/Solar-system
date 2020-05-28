@@ -8,13 +8,38 @@ public class CameraHandler : MonoBehaviour
     public Universe universe;
 
     public List<CelestialBody> selectedBodies {get; set;}
-    public CelestialBody centeredBody {get; set;}
+
+    private CelestialBody centeredBody;
+    public CelestialBody CenteredBody {
+        get {
+            return centeredBody;
+        }
+        set {
+            centeredBody = value;
+            if (value != null){
+                fixedToOrigin = false;  
+            }
+        }
+    }    
     
     public bool fixedToOrigin {get; set;} = false;
-    public Vector3 mouseDown {get; set;}
-    public Vector3 mouseUp {get; set;}
-
+    public Vector3 mouseDown;
+    private Vector3 mouseUp;
+    public Vector3 MouseUp {
+        get {
+            return mouseUp;
+        }
+        set {
+            mouseUp = value;
+            selectedBodies = GetBodiesInRange(mouseDown, mouseUp);
+            fixedToOrigin = false;
+        }
+    }
     public bool fixedHeight {get; set;} = false;
+
+    public void LateUpdate(){
+        UpdatePosition();
+    }
 
     public void UpdatePosition()
     {
@@ -25,15 +50,8 @@ public class CameraHandler : MonoBehaviour
     {
         mouseDown = GetIntersectXZPlane();
     }
-
-    public void UpdateSelectedBodies()
-    {
-        mouseUp = GetIntersectXZPlane();
-
-        selectedBodies = GetBodiesInRange(mouseDown, mouseUp);
-        fixedToOrigin = false;
-        
-        UpdatePosition();
+    public void SetMouseUp(){
+        MouseUp = GetIntersectXZPlane();
     }
 
     /// <summary>
@@ -251,6 +269,7 @@ public class CameraHandler : MonoBehaviour
         {
             if (Vector3.Distance(body.transform.position, intersect) < body.Radius)
             {
+                // Reset centered body
                 if (body == centeredBody)
                 {
                     centeredBody = null;
@@ -261,8 +280,6 @@ public class CameraHandler : MonoBehaviour
                     fixedToOrigin = false;
                 }
 
-                UpdatePosition();
-
                 return;
             }
         }
@@ -271,7 +288,6 @@ public class CameraHandler : MonoBehaviour
     public void ResetSelectedBodies()
     {
         selectedBodies = universe.solarSystem.bodies;
-        UpdatePosition();
     }
 
     public void FlipFixedHeight()
