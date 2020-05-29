@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CelestialBody : MonoBehaviour
 {
+    [SerializeField]
+    private float temp;
 
     // NOTE The use of auto-implemented properies are not used, since they won't
     // show up in the inspector
@@ -28,6 +30,12 @@ public class CelestialBody : MonoBehaviour
         } 
         set {
             mass = value;
+
+            if(density !=  0){
+                radius = CalcRadius(Mass, Density);
+                float diameter = 2 * Radius;
+                transform.localScale = new Vector3(diameter, diameter, diameter);
+            }
         }
     }
 
@@ -39,6 +47,10 @@ public class CelestialBody : MonoBehaviour
             return density;
         } set{
             density = value;
+
+            if(Radius != 0f){
+                mass = CalcMass(Density, Radius);
+            }
         }
     }
 
@@ -51,13 +63,21 @@ public class CelestialBody : MonoBehaviour
         }
         set {
             radius = value;
+
+            if(Mass != 0f){
+
+                density = CalcDensity(Mass, Radius);
+
+                float diameter = 2 * Radius;
+                transform.localScale = new Vector3(diameter, diameter, diameter);
+            }
         }
     }
 
     public void SetValues(Vector3 _position, Vector3 _velocity)
     {
         this.transform.position = _position;
-        velocity = _velocity;
+        Velocity = _velocity;
     }
 
     public void UpdateVelocity(List<CelestialBody> bodies, float timeStep)
@@ -78,27 +98,29 @@ public class CelestialBody : MonoBehaviour
             
             Vector3 dir = vec.normalized;
 
-            Vector3 force = Constants.G * body.mass * this.mass / distSqr * dir;
-            Vector3 acc = force / this.mass;
+            Vector3 force = Constants.G * body.Mass * this.Mass / distSqr * dir;
+            Vector3 acc = force / this.Mass;
 
-            this.velocity += acc * timeStep;
+            this.Velocity += acc * timeStep;
         }
     }
 
    public  void UpdatePosition(float timeStep)
     {
-        this.transform.position += this.velocity * timeStep;
+        this.transform.position += this.Velocity * timeStep;
     }
 
     public float CalcRadius(float mass, float density)
+    {         
+        return Mathf.Pow(mass * 3 / 4 / Mathf.PI / density, 1f/3);
+    }
+
+    public float CalcMass(float density, float radius)
     {
-        // M = 4/3 Pi r^3 * dens => r = (m * 3/ 4 / Pi / dens) ** 1/3
-        float radius = Mathf.Pow(mass * 3 / 4 / Mathf.PI / density, 1f/3);        
-        
-        // Temp, will be updated once I understand get/set
-        float diameter = 2 * radius;
-        transform.localScale = new Vector3(diameter, diameter, diameter);
-        
-        return radius;
+        return 4f / 3 * Mathf.PI * Mathf.Pow(radius, 3) * density;
+    }
+    public float CalcDensity(float mass, float radius)
+    {
+        return mass / (4f / 3 * Mathf.PI * Mathf.Pow(radius, 3));
     }
 }
