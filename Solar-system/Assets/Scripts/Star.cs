@@ -11,7 +11,7 @@ public class Star : CelestialBody
         Density = 0.1f;
 
         Radius = CalcRadius(Mass, Density);
-        
-        this.GetComponent<Renderer>().material.color = Color.yellow;
+
+        gameObject.layer = LayerMask.NameToLayer("Star");
     }
 }
