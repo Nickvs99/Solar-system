@@ -76,4 +76,12 @@ public static class Distribution {
 
         return planetMass;
     }
+
+    public static float GenerateDistantStarDistance()
+    {
+        if (avg) {return Mathf.Pow(10, 7f);}
+
+        return Mathf.Pow(10, Random.Range(6f, 8f));
+        
+    }
 }

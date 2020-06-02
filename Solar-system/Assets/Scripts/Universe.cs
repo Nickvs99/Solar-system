@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Universe : MonoBehaviour
 {
+    public Star starPrefab;
+
+    public Planet planetPrefab;
+    
     public SolarSystem solarSystem;
 
     public enum SpawnMethods
@@ -19,7 +23,8 @@ public class Universe : MonoBehaviour
     public float initialSize;
 
     [Header("Spawn orbital properties")]
-    public float temp;
+    [SerializeField]
+    private int DistantStarCount = 100;
 
     [Header("Seed generator")]
     public bool randomSeed;
@@ -34,6 +39,7 @@ public class Universe : MonoBehaviour
     void Start()
     {
         SpawnSystem();
+        SpawnDistantStars();
     }
 
     void Update()
@@ -102,6 +108,19 @@ public class Universe : MonoBehaviour
         }
 
         Camera.main.GetComponent<CameraHandler>().UpdatePosition();
+    }
+
+    void SpawnDistantStars()
+    {   
+        for(int i = 0; i < DistantStarCount; i++){
+            Star star = Instantiate(starPrefab);
+            star.Initialize();
+
+            float starDist = Distribution.GenerateDistantStarDistance();
+            Vector3 pos = Random.onUnitSphere * starDist;
+
+            star.SetValues(pos, new Vector3(0,0,0));
+        }
     }
 
     private void OnValidate()

@@ -3,13 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SolarSystem : MonoBehaviour
-{
+{   
     [SerializeField]
-    private Star starPrefab;
-
-    [SerializeField]
-    private Planet planetPrefab;
-
+    private Universe universe;
     public List<CelestialBody> bodies  {get; set;} = new List<CelestialBody>();
 
     public void SpawnBodiesBlock(int n, float boxWidth)
@@ -356,14 +352,14 @@ public class SolarSystem : MonoBehaviour
     }
 
     private Star SpawnStar(){
-        Star star = Instantiate(starPrefab);
+        Star star = Instantiate(universe.starPrefab);
         star.Initialize();
         bodies.Add(star);
         return star;
     }
 
     private Planet SpawnPlanet(){
-        Planet planet = Instantiate(planetPrefab);
+        Planet planet = Instantiate(universe.planetPrefab);
         planet.Initialize();
         bodies.Add(planet);
         return planet;

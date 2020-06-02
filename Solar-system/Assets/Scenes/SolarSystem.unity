@@ -248,10 +248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae2234d234c27141896d97d021709b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  starPrefab: {fileID: -1663484713830856767, guid: e2d052f40789109468c5e70918edb52b,
-    type: 3}
-  planetPrefab: {fileID: 8023342254670308121, guid: a2eba98e61e9f73419ba2553630c43d8,
-    type: 3}
+  universe: {fileID: 1507293418}
 --- !u!4 &1069210266
 Transform:
   m_ObjectHideFlags: 0
@@ -353,11 +350,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dc5c9cf500af1749927be04794c6d3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  starPrefab: {fileID: -1663484713830856767, guid: e2d052f40789109468c5e70918edb52b,
+    type: 3}
+  planetPrefab: {fileID: 8023342254670308121, guid: a2eba98e61e9f73419ba2553630c43d8,
+    type: 3}
   solarSystem: {fileID: 1069210265}
   spawnmethod: 1
   bodies: 15
   initialSize: 150000
-  temp: 0
+  DistantStarCount: 1000
   randomSeed: 1
   seed: 0
   timeStep: 1
