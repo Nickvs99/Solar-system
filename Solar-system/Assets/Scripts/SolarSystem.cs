@@ -353,7 +353,7 @@ public class SolarSystem : MonoBehaviour
 
     private Star SpawnStar(){
         Star star = Instantiate(universe.starPrefab);
-        star.Initialize();
+        star.Initialize(Star.StarType.LocalStar);
         bodies.Add(star);
         return star;
     }

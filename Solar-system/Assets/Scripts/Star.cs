@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class Star : CelestialBody
 {
-    public void Initialize()
+
+    public enum StarType {
+        LocalStar,
+        DistantStar
+    }
+
+    public void Initialize(StarType starType)
     {
         Mass = Distribution.GenerateSolarMass();
 
@@ -13,5 +19,9 @@ public class Star : CelestialBody
         Radius = CalcRadius(Mass, Density);
 
         gameObject.layer = LayerMask.NameToLayer("Star");
+
+        if(starType == StarType.DistantStar){
+            Destroy(this.GetComponent<Light>());
+        }
     }
 }

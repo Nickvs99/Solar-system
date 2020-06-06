@@ -114,7 +114,7 @@ public class Universe : MonoBehaviour
     {   
         for(int i = 0; i < DistantStarCount; i++){
             Star star = Instantiate(starPrefab);
-            star.Initialize();
+            star.Initialize(Star.StarType.DistantStar);
 
             float starDist = Distribution.GenerateDistantStarDistance();
             Vector3 pos = Random.onUnitSphere * starDist;
